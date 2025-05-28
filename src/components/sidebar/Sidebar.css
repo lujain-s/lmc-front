@@ -1,0 +1,99 @@
+@import "../../styles/colors.css"; /* استيراد ملف الألوان */
+
+/* الحاوية الكاملة للسايدبار */
+.sidebar-container {
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: var(--secondary-color) !important;
+  z-index: 1000;
+  overflow: hidden;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* السايدبار نفسها */
+.sidebar-custom {
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px);
+  color: var(--text-color) !important;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) transparent;
+}
+
+/* رأس السايدبار */
+.sidebar-header {
+  background-color: var(--primary-color) !important;
+  color: var(--white-color) !important;
+  text-align: center;
+  font-size: 18px;
+  border-radius: 20px;
+}
+
+.sidebar-header a {
+  color: var(--white-color) !important;
+  text-decoration: none !important;
+}
+
+/* قائمة الروابط */
+.sidebar-content .side-item {
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* عند تمرير الماوس */
+.sidebar-content .side-item:hover {
+  background-color: var(--primary-color);
+  color: var(--white-color) !important;
+}
+
+/* تلوين محتوى العنصر عند تمرير الماوس */
+.sidebar-content .side-item:hover .cdb-sidebar-menu-item {
+  color: var(--white-color) !important;
+}
+
+/* عند الضغط بالماوس */
+.sidebar-content .side-item:active {
+  background-color: var(--primary-color);
+  color: var(--white-color) !important;
+}
+
+/* العنصر النشط حاليًا */
+.sidebar-content .activeClicked {
+  background-color: var(--primary-color) !important;
+  color: var(--white-color) !important;
+}
+
+.sidebar-content .activeClicked .cdb-sidebar-menu-item {
+  color: var(--white-color) !important;
+}
+
+/* عند تمرير الماوس على العنصر النشط */
+.sidebar-content .activeClicked:hover {
+  background-color: var(--btn-hover) !important;
+}
+
+/* الفوتر */
+.sidebar-footer {
+  background-color: var(--secondary-color) !important;
+  color: var(--white-color) !important;
+  text-align: center;
+  padding: 15px;
+}
+
+/* تخصيص سكرول المتصفحات الداعمة */
+.sidebar-custom::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-custom::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-custom::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 10px;
+  border: none;
+}

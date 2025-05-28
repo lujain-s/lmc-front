@@ -1,0 +1,62 @@
+@import "../../styles/colors.css"; /* استيراد ملف الألوان */
+
+.navbar-custom {
+  background-color: var(--secondary-color);
+  padding: 10px 20px;
+  position: sticky; /* تثبيت الشريط في الأعلى */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* لضمان بقاء الشريط فوق جميع العناصر */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* إضافة ظل خفيف */
+}
+
+/* تنسيق شعار المعهد */
+.navbar-brand img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--primary-color);
+}
+
+.navbar-brand h2 {
+  color: var(--text-color);
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+/* تنسيق القائمة */
+.navbar-nav .nav-item .nav-link {
+  color: var(--text-color);
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 10px;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  color: var(--primary-color);
+}
+
+/* زر تسجيل الدخول */
+.btn-light {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-light:hover {
+  background-color: #cc5500;
+  color: var(--text-color);
+  transform: scale(1.05);
+}

@@ -1,0 +1,57 @@
+@import url('./colors.css');
+
+.languages-section {
+  background-color: var(--secondary-color);
+  padding: 80px 20px;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.language-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.language-card {
+  background-color: var(--white-color);
+  color: #333;
+  border-radius: 20px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.language-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.flag {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.language-name {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: var(--secondary-color);
+}
+
+.details-button {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.details-button:hover {
+  background-color: var(--btn-hover);
+}

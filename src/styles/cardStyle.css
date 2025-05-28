@@ -1,0 +1,144 @@
+:root {
+  --dark-blue: #003366; /* الأزرق الغامق */
+  --orange: #FF6600; /* البرتقالي */
+  --white: #FFFFFF; /* الأبيض */
+  --light-blue: #99CCFF; /* الأزرق الفاتح */
+  --grey: #F4F4F4; /* الرمادي */
+}
+
+.card {
+  background-color: var(--card-bg);
+  /* لون الخلفية باستخدام المتغير */
+  color: var(--secondary-color);
+  /* لون النص */
+  font-family: Arial, sans-serif;
+  /* نوع الخط */
+  border-radius: 12px;
+  /* حواف دائرية للكارد */
+  box-shadow: 0 4px 8px var(--card-border);
+  /* ظل جذاب */
+  overflow: hidden;
+  /* لضمان عدم خروج المحتوى عن الحواف */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* تأثير التفاعل */
+}
+
+.bg-darkblue{
+  background-color:  #1E3A5F;
+}
+.bg-orange{
+  background-color: var(--orange);
+}
+.text-orange{
+  color: var( --orange);
+}
+.card:hover {
+  transform: translateY(-8px);
+  /* رفع الكارد قليلاً */
+  box-shadow: 0 8px 16px var(--card-border);
+  /* زيادة الظل */
+}
+
+.card-header {
+    background-color: #17a2b8;
+    /* لون خلفية الرأس */
+    color: white;
+    /* لون النص */
+    padding: 15px 20px;
+    /* تبطين */
+    border-top-left-radius: 10px;
+    /* تقريب زاوية الرأس العلوية اليسرى */
+    border-top-right-radius: 10px;
+    /* تقريب زاوية الرأس العلوية اليمنى */
+}
+
+/* محتوى الكارد */
+.card-body {
+  padding: 20px;
+  /* حشوة داخل المحتوى */
+  font-size: 1rem;
+  /* حجم الخط */
+  line-height: 1.6;
+  /* تباعد الأسطر */
+}
+
+
+.btn-info {
+    background-color: #17a2b8;
+    /* تنسيق الأزرار لتتطابق مع الرأس */
+    border: none;
+    /* إزالة الحدود */
+    border-radius: 5px;
+    /* تقريب زوايا الزر */
+    padding: 10px 15px;
+    /* تبطين */
+    color: white;
+    /* لون النص */
+    transition: background-color 0.3s ease;
+    /* تأثير انتقال للون الخلفية */
+}
+
+.btn-info:hover {
+    background-color: #138496;
+    /* تغيير لون الزر عند التحويم */
+}
+
+.form-control {
+    border-radius: 5px;
+    /* تقريب زوايا الحقول */
+    border: 1px solid #ccc;
+    /* حدود خفيفة للحقول */
+}
+
+.profile-img-container {
+    margin: 10px auto;
+    /* توسيط ومسافة من الأعلى والأسفل */
+    transition: transform 0.2s ease;
+    /* تأثير تحويم للصورة */
+}
+
+.profile-img-container:hover {
+    transform: scale(1.05);
+    /* تكبير الصورة قليلاً عند التحويم */
+}
+
+header {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    background-position: center;
+    text-align: center;
+    color: white;
+  }
+  
+  header .header-content {
+    position: relative;
+    text-align: center;
+    padding: 100px 15px 100px;
+    width: 100%;
+  }
+  
+  header .header-content .header-content-inner h1 {
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 30px;
+    font-family: 'ProximaNova-Bold'
+  }
+  
+  header .header-content .header-content-inner hr {
+    margin: 30px auto;
+  }
+  
+  header .header-content .header-content-inner p {
+    color: #fff;
+    font-size: 20px;
+    margin-bottom: 50px;
+  }
+  .page-header {
+    background-size: cover;
+  }  

@@ -1,0 +1,9 @@
+/* src/styles/colors.css */
+:root {
+    --dark-blue: #003366; /* الأزرق الغامق */
+    --orange: #FF6600; /* البرتقالي */
+    --white: #FFFFFF; /* الأبيض */
+    --light-blue: #99CCFF; /* الأزرق الفاتح */
+    --grey: #F4F4F4; /* الرمادي */
+  }
+  

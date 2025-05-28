@@ -1,0 +1,8 @@
+/* styles/colors.css */
+:root {
+  --primary-color: #FF7F00;  /* برتقالي */
+  --secondary-color: #1E3A5F; /* أزرق غامق */
+  --white-color: #FFFFFF;  /* أبيض */
+  --text-color: #ffffff; /* أبيض */
+  --btn-hover: #E06B00; /* لون الزر عند التمرير */
+}

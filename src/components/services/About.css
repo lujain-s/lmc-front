@@ -1,0 +1,105 @@
+:root {
+    --primary-color: #FF7F00;  /* برتقالي */
+    --secondary-color: #1E3A5F; /* أزرق غامق */
+    --white-color: #FFFFFF;  /* أبيض */
+    --text-color: #ffffff; /* أبيض */
+    --btn-hover: #E06B00; /* لون الزر عند التمرير */
+    --gray: #f9f9f9;
+    --light: #ffffff;
+  }
+  
+  .about-section {
+    padding: 70px 20px;
+    background: linear-gradient(to right, var(--gray), #e0eafc);
+    border-radius: 20px;
+    margin-top: 146px;
+    transition: all 0.3s ease-in-out;
+    animation: fadeIn 1s ease-in-out;
+    
+  }
+  
+  .section-title {
+    color: var(--secondary-color);
+    /* font-size: 28px; */
+    font-weight: 700;
+    border-left: 6px solid var(--primary-color);
+    padding-left: 10px;
+    
+  }
+  
+  .about-description {
+    font-size: 18px;
+    color: #444;
+    line-height: 1.7;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .about-card {
+    background-color: var(--light);
+    border-radius: 15px;
+    padding: 39.1px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease-in-out;
+    border: 2px solid rgba(0, 40, 85, 0.15);
+  
+  }
+  
+  .about-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .about-image {
+    width: 100%;
+    max-width: 450px;
+    border-radius: 12px;
+    border: 4px  var(--secondary-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  
+  }
+  
+  .about-location {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+  }
+  
+  /* تأثير ظهور ناعم */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* استجابة للشاشات الصغيرة */
+  @media (max-width: 768px) {
+    .about-section .row {
+      flex-direction: column;
+    }
+  
+    .about-text {
+      order: 1;
+      text-align: center;
+      margin-bottom: 40px; /* إضافة مسافة تحت النص */
+    }
+  
+    .about-image-col {
+      order: 2;
+      max-width: 90%;
+      margin: 0 auto 0; /* ازلت الهامش العلوي لأن المسافة تحت النص كافية */
+    }
+  
+    .about-image {
+      width: 80%;
+      height: auto;
+    }
+  }
+  
+  
