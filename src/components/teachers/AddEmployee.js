@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { useNavigate } from "react-router-dom";
 import Validator from "../back_component/Validator";
 import Operations from "../back_component/Operations";
 
-export default function AddEmployee() {
+export default function AddEmployee({ onSuccess }) {
   const { isEmpty, isValidEmail, isValidPhone } = Validator();
-  const navigate = useNavigate();
   const { request } = Operations();
 
   const [name, setName] = useState("");
@@ -22,12 +20,14 @@ export default function AddEmployee() {
   const [success, setSuccess] = useState(null);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  
+
   const validateForm = () => {
     let newErrors = {};
     if (isEmpty(name)) newErrors.name = "Name is required.";
-    if (isEmpty(email) || !isValidEmail(email)) newErrors.email = "Valid email is required.";
-    if (isEmpty(password) || password.length < 6) newErrors.password = "Password must be at least 6 characters.";
+    if (isEmpty(email) || !isValidEmail(email))
+      newErrors.email = "Valid email is required.";
+    if (isEmpty(password) || password.length < 6)
+      newErrors.password = "Password must be at least 6 characters.";
     // if (isEmpty(phone) || !isValidPhone(phone)) newErrors.phone = "Valid phone number is required.";
     if (isEmpty(dob)) newErrors.dob = "Date of birth is required.";
     if (isEmpty(role_id)) newErrors.role_id = "Please select an employee type.";
@@ -58,91 +58,28 @@ export default function AddEmployee() {
     };
   }, [imagePreviewUrl]);
 
- 
-  
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setSuccess(null);
-  //   setErrors({});
-  //   setLoading(true);
-  
-  //   if (validateForm()) {
-  //     try {
-  //       const formData = new FormData();
-  //       formData.append('name', name);
-  //       formData.append('email', email);
-  //       formData.append('password', password);
-  //       formData.append('phone', phone);
-  //       formData.append('dob', dob);
-  //       formData.append('role_id', role_id);
-  
-  //       const response = await request.post('super-admin/register', formData, {
-  //         headers: { 'Content-Type': 'multipart/form-data' },
-  //       });
-  
-  //       const userId = response.data.user.id;
-  
-  //       if (imageFile || global_info) {
-  //         const infoFormData = new FormData();
-  //         if (imageFile) infoFormData.append('Photo', imageFile);
-  //         if (global_info) infoFormData.append('Description', global_info);
-  
-  //         // إرسال user_id مع البيانات
-  //         infoFormData.append('user_id', userId);
-  
-  //         await request.post('staff/editMyInfo', infoFormData, {
-  //           headers: { 'Content-Type': 'multipart/form-data' },
-  //         });
-  //       }
-  
-  //       setSuccess('User added successfully!');
-  //       // إعادة تعيين الحقول ...
-  //     } catch (error) {
-  //       // التعامل مع الأخطاء ...
-  //     }
-  //   }
-  //   setLoading(false);
-  // };
-  
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess(null);
     setErrors({});
     setLoading(true);
-  
+
     if (validateForm()) {
       try {
         const formData = new FormData();
-        formData.append('name', name);
-        formData.append('email', email);
-        formData.append('password', password);
-        formData.append('phone', phone);
-        formData.append('dob', dob);
-        formData.append('role_id', role_id);
-  
-        const response = await request.post('super-admin/register', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("phone", phone);
+        formData.append("dob", dob);
+        formData.append("role_id", role_id);
+        formData.append("Photo", imageFile);
+        formData.append("Description", global_info);
+        const response = await request.post("super-admin/register", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
         });
-  
-        const userId = response.data.user.id;
-  
-        if (imageFile || global_info) {
-          const infoFormData = new FormData();
-          if (imageFile) infoFormData.append('Photo', imageFile);
-          if (global_info) infoFormData.append('Description', global_info);
-  
-          // إرسال user_id مع البيانات
-          infoFormData.append('user_id', userId);
-  
-          await request.post('staff/editMyInfo', infoFormData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          });
-        }
-  
-        setSuccess('User added successfully!');
+
+        setSuccess("User added successfully!");
         setName("");
         setEmail("");
         setPassword("");
@@ -152,21 +89,17 @@ export default function AddEmployee() {
         setImageFile(null);
         setImagePreviewUrl(null);
         setGlobalInfo("");
-
+        onSuccess();
       } catch (error) {
         setErrors({ general: "Something went wrong. Please try again." });
       }
     }
     setLoading(false);
   };
-  
-  
 
-
- 
   return (
     <div
-      className="container py-5"
+      className="py-5"
       style={{ backgroundColor: "#f5f7fa", minHeight: "100vh" }}
     >
       {/* CSS خاص بالتركيز focus على الحقول */}
@@ -192,7 +125,9 @@ export default function AddEmployee() {
           <h1 className="display-5" style={{ color: "#1E3A5F" }}>
             Add New Employee
           </h1>
-          <p className="lead mb-0" style={{ color: "#FF7F00" }}>Here you can add a new employee</p>
+          <p className="lead mb-0" style={{ color: "#FF7F00" }}>
+            Here you can add a new employee
+          </p>
           <hr />
         </div>
       </div>
@@ -220,14 +155,43 @@ export default function AddEmployee() {
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
-              {[
-                  { label: "Name", value: name, setter: setName, type: "text", error: errors.name },
-                  { label: "Email", value: email, setter: setEmail, type: "email", error: errors.email },
-                  { label: "Password", value: password, setter: setPassword, type: "password", error: errors.password },
-                  { label: "Phone Number", value: phone, setter: setPhone, type: "tel", error: errors.phone },
-                  { label: "Date of Birth", value: dob, setter: setDob, type: "date", error: errors.dob }
+                {[
+                  {
+                    label: "Name",
+                    value: name,
+                    setter: setName,
+                    type: "text",
+                    error: errors.name,
+                  },
+                  {
+                    label: "Email",
+                    value: email,
+                    setter: setEmail,
+                    type: "email",
+                    error: errors.email,
+                  },
+                  {
+                    label: "Password",
+                    value: password,
+                    setter: setPassword,
+                    type: "password",
+                    error: errors.password,
+                  },
+                  {
+                    label: "Phone Number",
+                    value: phone,
+                    setter: setPhone,
+                    type: "tel",
+                    error: errors.phone,
+                  },
+                  {
+                    label: "Date of Birth",
+                    value: dob,
+                    setter: setDob,
+                    type: "date",
+                    error: errors.dob,
+                  },
                 ].map((field, index) => (
-
                   <div className="mb-3 text-start" key={index}>
                     <label
                       className="form-label"
@@ -326,11 +290,13 @@ export default function AddEmployee() {
                   style={{
                     backgroundColor: "#1E3A5F",
                     color: "#fff",
-                    transition: "background-color 0.3s ease, box-shadow 0.3s ease",
+                    transition:
+                      "background-color 0.3s ease, box-shadow 0.3s ease",
                   }}
                   onMouseOver={(e) => {
                     e.currentTarget.style.backgroundColor = "#FF7F00";
-                    e.currentTarget.style.boxShadow = "0 0 12px rgba(255, 127, 0, 0.5)";
+                    e.currentTarget.style.boxShadow =
+                      "0 0 12px rgba(255, 127, 0, 0.5)";
                   }}
                   onMouseOut={(e) => {
                     e.currentTarget.style.backgroundColor = "#1E3A5F";

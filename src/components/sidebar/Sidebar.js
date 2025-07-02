@@ -8,8 +8,48 @@ import {
   CDBSidebarMenuItem,
 } from "cdbreact";
 import { NavLink } from "react-router-dom";
+import Operations from "../back_component/Operations";
 import "./Sidebar.css"; // استيراد ملف الـ CSS
+
 const Sidebar = () => {
+  const { getUser } = Operations();
+  const user = getUser();
+  // تحديد صلاحية المستخدم
+  const isAdmin = user && user.role === "SuperAdmin";
+  const isSecretary = user && user.role === "Secretarya";
+
+  // التبويبات المسموحة للسكرتيرة
+  const secretaryTabs = [
+    { to: "/", icon: "columns", label: "Home" },
+    { to: "/rooms", icon: "school", label: "Clases" },
+    { to: "/profile", icon: "user", label: "Profile page" },
+    { to: "/student-list", icon: "users", label: "Student List" },
+    { to: "/announcements", icon: "users", label: "Announcements" },
+  ];
+
+  // كل التبويبات للإدمن (نفس الترتيب الحالي)
+  const adminTabs = [
+    { to: "/", icon: "columns", label: "Home" },
+    { to: "/employee-list", icon: "table", label: "Employee List" },
+    { to: "/holidays", icon: "calendar", label: "Holidays" },
+    { to: "/language", icon: "language", label: "Language List" },
+    { to: "/rooms", icon: "school", label: "Clases" },
+    { to: "/profile", icon: "user", label: "Profile page" },
+    { to: "/statistics", icon: "chart-line", label: "Analytics" },
+    { to: "/student-grade", icon: "fas fa-chart-bar", label: "student grade" },
+    { to: "/courses-date", icon: "clock", label: "Courses date" },
+    { to: "/about", icon: "exclamation-circle", label: "Website info" },
+    { to: "/invoices", icon: "list", label: "invoices" },
+    { to: "/student-list", icon: "users", label: "Student List" },
+    { to: "/services-manage", icon: "services", label: "Services Page" },
+    { to: "/complaint-list", icon: "users", label: "Complaint List" },
+    { to: "/announcements", icon: "users", label: "Announcements" },
+    { to: "/Tasks", icon: "tasks", label: "Tasks" },
+  ];
+
+  // اختيار التبويبات حسب الدور
+  const tabs = isAdmin ? adminTabs : isSecretary ? secretaryTabs : [];
+
   return (
     <div className=" sidebar-container ">
       <CDBSidebar className="sidebar-custom container">
@@ -22,59 +62,17 @@ const Sidebar = () => {
 
         <CDBSidebarContent className="sidebar-content">
           <CDBSidebarMenu>
-            <NavLink
-              exact
-              to="/"
-              activeClassName="activeClicked"
-              className="side-item"
-            >
-              <CDBSidebarMenuItem icon="columns">Home</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/employee-list" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="table">
-                Employee List
-              </CDBSidebarMenuItem>
-            </NavLink>
-
-            <NavLink exact to="/holidays" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="calendar">Holidays</CDBSidebarMenuItem>
-            </NavLink>
-
-            <NavLink exact to="/profile" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="user">Profile page</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/statistics" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="chart-line">
-                Analytics
-              </CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/student-grade" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="fas fa-chart-bar">
-                student grade
-              </CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/courses-date" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="clock">Courses date</CDBSidebarMenuItem>
-            </NavLink>
-
-            <NavLink exact to="/about" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="exclamation-circle">
-                Website info
-              </CDBSidebarMenuItem>
-            </NavLink>
-
-            <NavLink exact to="/student-list" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="users">Student List</CDBSidebarMenuItem>
-            </NavLink>
-            <NavLink exact to="/complaint-list" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="users">
-                Complaint List
-              </CDBSidebarMenuItem>
-            </NavLink>
-
-            <NavLink exact to="/Tasks" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="tasks">Tasks</CDBSidebarMenuItem>
-            </NavLink>
+            {tabs.map(({ to, icon, label }) => (
+              <NavLink
+                key={to}
+                exact
+                to={to}
+                activeClassName="activeClicked"
+                className="side-item"
+              >
+                <CDBSidebarMenuItem icon={icon}>{label}</CDBSidebarMenuItem>
+              </NavLink>
+            ))}
           </CDBSidebarMenu>
         </CDBSidebarContent>
 

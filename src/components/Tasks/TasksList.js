@@ -2,41 +2,47 @@ import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import AddTask from "./AddTask";
 import useOperations from "../back_component/Operations";
-import { Link } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import $ from "jquery";
-
+import { useQuery } from "@tanstack/react-query";
 
 const TasksList = () => {
   const { request } = useOperations();
-  const [tasks, setTasks] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [errors, setErrors] = useState({});
-
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchTasks = async () => {
-    try {
-      const res = await request.get('super-admin/showTasks');
-      setTasks(res.data.Tasks || []);
-      console.log("Tasks fetched:", res.data.Tasks);
-    } catch (error) {
-      console.error(error);
-      if (error.code === "ERR_NETWORK") {
-        setErrors({ general: error.message });
-      } else {
-        setErrors({ general: error.response?.data?.message || "Unknown error" });
-      }
-    }
+    const res = await request.get("super-admin/showTasks");
+    return res.data.Tasks || [];
   };
+
+  const {
+    data: tasks = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: fetchTasks,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    refetchOnReconnect: false,
+    staleTime: 5 * 60 * 1000,
+  });
 
   const handleAddTask = () => {
     setShowModal(false);
-    fetchTasks();
+    refetch();
   };
+  const filteredTasks = tasks.filter(
+    (task) =>
+      task.Description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.Status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.users.some((user) =>
+        user.name?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+  );
 
   useEffect(() => {
     $("#taskSearch").on("keyup", function () {
@@ -47,11 +53,8 @@ const TasksList = () => {
     });
   }, []);
 
-
-
   return (
     <div className="container min-vh-100 d-flex flex-column align-items-center bg-light pt-5">
-                
       <h1
         className="text-center text-uppercase gap-2 pt-1 pb-5 mt-5"
         style={{
@@ -64,47 +67,63 @@ const TasksList = () => {
         LMC TASKS LIST
       </h1>
 
-                  <p className="text-center">
-                        Type something in the input field to filter the table data, e.g. type  (انتبهي للبحث ناقص) in search field...
-                    </p>
-                    <input className="form-control package-item mb-0" id="courseSearch" type="text" placeholder="Search..." />
-                    <br />
+      <p className="text-center">
+        Type something in the input field to filter the table data, e.g. type
+        (انتبهي للبحث ناقص) in search field...
+      </p>
+      <input
+        className="form-control package-item mb-0"
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
 
-      {errors.general && (
-        <div className="alert alert-danger w-100 text-center" role="alert">
-          {errors.general}
-        </div>
-      )}
+      <br />
 
       <div className="table-responsive card2 p-0 w-100">
         <table className="table mb-0 table-bordered table-striped">
-        <thead>
-  <tr>
-    <th style={{ color: "#1E3A5F" }}>Task ID</th>
-    <th style={{ color: "#1E3A5F" }}>Status</th>
-    <th style={{ color: "#1E3A5F" }}>User ID</th>
-  </tr>
-</thead>
+          <thead>
+            <tr>
+              <th style={{ color: "#1E3A5F" }}>Task ID</th>
+              <th style={{ color: "#1E3A5F" }}>Description</th>
+              <th style={{ color: "#1E3A5F" }}>Status</th>
+              <th style={{ color: "#1E3A5F" }}>User name</th>
+            </tr>
+          </thead>
 
-<tbody>
-  {tasks.length > 0 ? (
-    tasks.map((item, index) => (
-      <tr key={item.id || index}>
-        <td>{item.id ?? "N/A"}</td>           
-        <td>{item.Status ?? "N/A"}</td>       
-        <td>{item.CreatorId ?? "N/A"}</td>    
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={3} className="text-center text-muted">
-        No tasks found.
-      </td>
-    </tr>
-  )}
-</tbody>
-
-
+          <tbody>
+            {filteredTasks.length > 0 ? (
+              filteredTasks.map((item, index) => (
+                <tr key={item.id || index}>
+                  <td>{item.id ?? "-"}</td>
+                  <td>{item.Description ?? "-"}</td>
+                  <td>{item.Status ?? "-"}</td>
+                  <td className="d-flex gap-1">
+                    {item.users.map((x) => <p>{x.name + " " + "|"}</p>) ?? "-"}
+                  </td>
+                </tr>
+              ))
+            ) : isError ? (
+              <tr>
+                <td colSpan={3} className="text-center text-muted">
+                  {error}
+                </td>
+              </tr>
+            ) : isLoading ? (
+              <tr>
+                <td colSpan={3} className="text-center text-muted">
+                  Loading...
+                </td>
+              </tr>
+            ) : (
+              <tr>
+                <td colSpan={3} className="text-center text-muted">
+                  No tasks found.
+                </td>
+              </tr>
+            )}
+          </tbody>
         </table>
       </div>
 
@@ -131,11 +150,14 @@ const TasksList = () => {
       </button>
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton style={{ backgroundColor: "#1E3A5F", color: "white" }}>
+        <Modal.Header
+          closeButton
+          style={{ backgroundColor: "#1E3A5F", color: "white" }}
+        >
           <Modal.Title>Add New Task</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <AddTask onSubmit={handleAddTask} onClose={() => setShowModal(false)} />
+          <AddTask onSubmit={handleAddTask} />
         </Modal.Body>
       </Modal>
 

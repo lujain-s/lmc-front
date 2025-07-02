@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
-import { useNavigate } from 'react-router-dom';
-import Operations from '../back_component/Operations';
+import { useNavigate } from "react-router-dom";
+import Operations from "../back_component/Operations";
 
-const AddTask = () => {
-  const { request, user } = Operations();
+const AddTask = ({ onSubmit }) => {
+  const { request } = Operations();
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
@@ -15,17 +15,31 @@ const AddTask = () => {
     Deadline: "",
     RequiresInvoice: false,
     role_id: "",
-    assigned_user_id: "", 
+    assigned_user_id: "",
   });
+  const [users, setUsers] = useState([]);
 
-
+  const fetchUsers = async () => {
+    try {
+      const res = await request.get(
+        `super-admin/getUsersByRoleId/${form.role_id}`
+      );
+      setUsers(res.data.users || []);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+      setUsers([]);
+    }
+  };
 
   useEffect(() => {
-  }, [user]);
+    if (form.role_id) {
+      fetchUsers();
+    }
+  }, [form.role_id]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
@@ -47,7 +61,7 @@ const AddTask = () => {
     };
 
     try {
-      const res = await request.post('super-admin/assignTask', data);
+      const res = await request.post("super-admin/assignTask", data);
       setSuccess("The task has been added successfully!");
       setForm({
         Description: "",
@@ -56,7 +70,7 @@ const AddTask = () => {
         role_id: "",
         assigned_user_id: "",
       });
-      
+      onSubmit();
     } catch (err) {
       console.error("Error in addTask:", err.response || err.message);
       if (err.response) {
@@ -65,9 +79,14 @@ const AddTask = () => {
         } else if (err.response.status === 401) {
           setErrorMsg("Unauthorized: Please log in again.");
         } else if (err.response.status === 400) {
-          setErrorMsg(err.response.data.message || `An error occurred: ${err.response.status}`);
+          setErrorMsg(
+            err.response.data.message ||
+              `An error occurred: ${err.response.status}`
+          );
         } else {
-          setErrorMsg(`An error occurred: ${err.response.status} - ${err.response.statusText}`);
+          setErrorMsg(
+            `An error occurred: ${err.response.status} - ${err.response.statusText}`
+          );
         }
       } else {
         setErrorMsg(`An error occurred: ${err.message}`);
@@ -126,30 +145,41 @@ const AddTask = () => {
 
       <Form.Group className="mb-3" controlId="roleId">
         <Form.Label>Role ID</Form.Label>
-        <Form.Control
-          type="text"
-          name="role_id"
+
+        <select
           value={form.role_id}
-          onChange={handleChange}
-          placeholder="Enter Role ID"
-          isInvalid={!!errors.role_id}
-          required
-        />
+          onChange={(e) => setForm({ ...form, role_id: e.target.value })}
+          className={`form-control rounded ${
+            errors.role_id ? "is-invalid" : ""
+          }`}
+        >
+          <option value="">Select employee type...</option>
+          <option value="2">Secretary</option>
+          <option value="3">Teacher</option>
+          <option value="4">Logistics</option>
+        </select>
         <Form.Control.Feedback type="invalid">
           {errors.role_id}
         </Form.Control.Feedback>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="assignedUserId">
-        <Form.Label>Assign to User ID</Form.Label>
-        <Form.Control
-          type="number"
+        <Form.Label>Assign to User</Form.Label>
+        <select
           name="assigned_user_id"
           value={form.assigned_user_id}
           onChange={handleChange}
-          placeholder="Enter User ID to assign task"
-          isInvalid={!!errors.user_id}
-        />
+          className={`form-control rounded ${
+            errors.user_id ? "is-invalid" : ""
+          }`}
+        >
+          <option value="">Select a user...</option>
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.name}
+            </option>
+          ))}
+        </select>
         <Form.Control.Feedback type="invalid">
           {errors.user_id}
         </Form.Control.Feedback>

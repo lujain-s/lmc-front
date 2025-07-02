@@ -1,103 +1,180 @@
-import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { Modal } from 'react-bootstrap';
-import AddEmployee from './AddEmployee';
+import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { Modal } from "react-bootstrap";
+import AddEmployee from "./AddEmployee";
 import Operations from "../back_component/Operations";
-import $ from 'jquery';
-import { FaUser, FaEnvelope, FaIdBadge, FaImage, FaAlignLeft, FaCogs } from 'react-icons/fa';
+import $ from "jquery";
+import {
+  FaUser,
+  FaEnvelope,
+  FaIdBadge,
+  FaImage,
+  FaAlignLeft,
+  FaCogs,
+  FaTrash,
+} from "react-icons/fa";
+import { useQuery } from "@tanstack/react-query";
+import Confirm from "../ui/confirmMessage";
+import { getRole } from "../back_component/utils";
+import { toast } from "react-toastify";
+import EmployeeDetails from "./employeeDetails";
 
 export default function EmployeeList() {
-  const [employees, setEmployees] = useState([]);
+  //const [employees, setEmployees] = useState([]);  //*****not used this state after use react quiry */
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showRestoreModal, setShowRestoreModal] = useState(false);
+  const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+  const [actionId, setActionId] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const { request } = new Operations();
+  const [fillter, setFillter] = useState("all");
+  const { request } = Operations();
   const handleClose = () => setShowModal(false);
   const handleOpen = () => setShowModal(true);
-  
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
+
+  //fetch employees using react quiry
+  const fetchEmployees = async () => {
+    const res = await request.get(
+      `super-admin/showAllEmployees${fillter ? `?filter=${fillter}` : ""}`
+    );
+    return res.data.employees;
+  };
+
+  //data from react quiry after fetch
+  const {
+    data: employees = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["employees", fillter],
+    queryFn: fetchEmployees,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    refetchOnReconnect: false,
+    staleTime: 5 * 60 * 1000,
+  });
 
   useEffect(() => {
-    // ✅ تفعيل البحث بعد تحميل البيانات
-    $("#myInput").on("keyup", function () {
+    const handler = function () {
       var value = $(this).val().toLowerCase();
       $("#myTable tr").filter(function () {
         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
       });
-    });
+    };
+
+    $("#myInput").on("keyup", handler);
+
+    return () => {
+      $("#myInput").off("keyup", handler);
+    };
   }, [employees]);
-
-
-
-  const fetchEmployees = async () => {
+  const handleDelete = async (id) => {
     try {
-      const res = await request.get('super-admin/getStaff');
-      setEmployees(res.data.users);
-    } catch (error) {
-      console.error(error);
-      if (error.code === "ERR_NETWORK") {
-        setErrors({ general: error.message });
-      } else {
-        setErrors({ general: error.response?.data?.message || "Unknown error" });
-      }
+      setLoading(true);
+      await request.delete(`super-admin/destroyEmployee/${id}`);
+      toast.success("Employee deleted successfuly!");
+      setShowDeleteModal(false);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
-
-  const handleDelete = (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this employee?");
-    if (confirmDelete) {
-      setEmployees(employees.filter(emp => emp.id !== id));
-      // هنا يمكنك إضافة طلب حذف للباكند إذا أردت
+  const handleRestore = async (id) => {
+    try {
+      setLoading(true);
+      await request.post(`super-admin/restoreEmployee/${id}`);
+      toast.success("Employee restored successfuly!");
+      setShowRestoreModal(false);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
+  const handleView = (id) => {
+    console.log("view:", id);
+    setShowEmployeeModal(true);
+    setActionId(id);
+  };
 
- 
   return (
     <div>
       {/* زر الإضافة العائم */}
       <button
         className="btn rounded-circle"
         style={{
-          position: 'fixed',
-          bottom: '60px',
-          right: '30px',
-          width: '60px',
-          height: '60px',
-          fontSize: '24px',
-          backgroundColor: '#1E3A5F',
-          borderColor: '#1E3A5F',
-          color: '#fff',
-          boxShadow: '0 4px 8px #1E3A5F',
+          position: "fixed",
+          bottom: "60px",
+          right: "30px",
+          width: "60px",
+          height: "60px",
+          fontSize: "24px",
+          backgroundColor: "#1E3A5F",
+          borderColor: "#1E3A5F",
+          color: "#fff",
+          boxShadow: "0 4px 8px #1E3A5F",
           zIndex: 1000,
-          border: 'none'
+          border: "none",
         }}
         onClick={handleOpen}
       >
         +
       </button>
-  
+
       <div className="pt-5 pb-5 mt-5">
-        <h1 className="text-center text-uppercase" style={{ letterSpacing: "5px", color: "#FF7F00" }}>
+        <h1
+          className="text-center text-uppercase"
+          style={{ letterSpacing: "5px", color: "#FF7F00" }}
+        >
           Employee List
         </h1>
         <br />
-  
+
         <div className="container">
           {errors.general && (
             <div className="alert alert-danger">{errors.general}</div>
           )}
           <p className="text-center">
-            Type something in the input field to filter the table data, e.g. type (Employee Name) in search field...
+            Type something in the input field to filter the table data, e.g.
+            type (Employee Name) in search field...
           </p>
-  
+
           <input
             className="form-control mb-4"
             id="myInput"
             type="text"
             placeholder=" Search ..."
           />
-  
+          <div className="flex gap-2">
+            <button
+              className={`btn btn-outline-primary ${
+                fillter === "all" ? "bg-primary text-light" : ""
+              }`}
+              onClick={() => setFillter("all")}
+            >
+              All
+            </button>
+            <button
+              className={`btn mx-2 btn-outline-primary ${
+                fillter === "active" ? "bg-primary text-light" : ""
+              }`}
+              onClick={() => setFillter("active")}
+            >
+              Active
+            </button>
+            <button
+              className={`btn btn-outline-primary ${
+                fillter === "only_deleted" ? "bg-primary text-light" : ""
+              }`}
+              onClick={() => setFillter("only_deleted")}
+            >
+              Deleted
+            </button>
+          </div>
           {/* الجدول مع الأيقونات والمسافة العلوية */}
           <div className="table-responsive card2 p-0 container mt-5">
             <table className="table mb-0 table-bordered table-striped">
@@ -114,15 +191,7 @@ export default function EmployeeList() {
                   </th>
                   <th style={{ color: "#1E3A5F" }}>
                     <FaIdBadge className="me-2" />
-                    Role ID
-                  </th>
-                  <th style={{ color: "#1E3A5F" }}>
-                    <FaImage className="me-2" />
-                    Photo
-                  </th>
-                  <th style={{ color: "#1E3A5F" }}>
-                    <FaAlignLeft className="me-2" />
-                    Description
+                    Role
                   </th>
                   <th style={{ color: "#1E3A5F" }}>
                     <FaCogs className="me-2" />
@@ -133,61 +202,70 @@ export default function EmployeeList() {
               <tbody id="myTable">
                 {employees.length > 0 ? (
                   employees.map((item, index) => {
-                    const photo = item['Other Info']?.Photo || '/default-profile.png';
-                    const description = item['Other Info']?.Description || '';
-  
                     return (
                       <tr key={item.id}>
                         <td>{index + 1}</td>
                         <td>
-                          <NavLink to={`/profile/${item.id}`} className="text-decoration-none text-dark">
+                          <NavLink
+                            to={`/profile/${item.id}`}
+                            className="text-decoration-none text-dark"
+                          >
                             {item.name}
                           </NavLink>
                         </td>
                         <td>{item.email}</td>
-                        <td>{item.role_id}</td>
-                        <td>
-                          <img
-                            src={photo}
-                            alt="Profile"
-                            style={{
-                              width: "60px",
-                              height: "60px",
-                              borderRadius: "50%",
-                              objectFit: "cover",
-                              boxShadow: "0 0 5px rgba(0,0,0,0.1)"
-                            }}
-                          />
-                        </td>
-                        <td>{description}</td>
+                        <td>{getRole(item.role_id)}</td>
+
                         <td>
                           <div className="d-flex gap-2">
-                            <Link
-                              to={`/edit-employee/${item.id}`}
-                              className="btn btn-sm "
-                              style={{
-                                color:"#ffffff",
-                                 backgroundColor: "#1E3A5F", 
-                                 borderColor: "#1E3A5F" , 
-                                 padding: '4px 10px',
-                                 borderRadius: '4px'}}
-                            >
-                              Edit
-                            </Link>
                             <button
-                              onClick={() => handleDelete(item.id)}
+                              onClick={() => {
+                                setActionId(item.id);
+                                setShowDeleteModal(true);
+                              }}
                               className="btn btn-danger btn-sm"
                             >
-                              Delete
+                              <FaTrash />
+                            </button>
+                            {fillter === "only_deleted" && (
+                              <button
+                                onClick={() => {
+                                  setActionId(item.id);
+                                  setShowRestoreModal(true);
+                                }}
+                                className="btn btn-warning btn-sm"
+                              >
+                                Restore
+                              </button>
+                            )}
+                            <button
+                              onClick={() => handleView(item.id)}
+                              className="btn btn-primary btn-sm"
+                            >
+                              View
                             </button>
                           </div>
                         </td>
                       </tr>
                     );
                   })
+                ) : isError ? (
+                  <tr>
+                    <td colSpan="7" className="text-center text-muted">
+                      {error}
+                    </td>
+                  </tr>
+                ) : isLoading ? (
+                  <tr>
+                    <td colSpan="7" className="text-center text-muted">
+                      Loading...
+                    </td>
+                  </tr>
                 ) : (
                   <tr>
-                    <td colSpan="7" className="text-center text-muted">No employees found.</td>
+                    <td colSpan="7" className="text-center text-muted">
+                      No employees found.
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -195,7 +273,7 @@ export default function EmployeeList() {
           </div>
         </div>
       </div>
-  
+
       {/* تحسين ستايل الفورم عند التركيز */}
       <style>
         {`
@@ -208,16 +286,58 @@ export default function EmployeeList() {
           }
         `}
       </style>
-  
+
       {/* نافذة إضافة موظف */}
       <Modal show={showModal} onHide={handleClose} size="lg">
         <Modal.Body className="bg-darkblue">
-          <AddEmployee onSuccess={() => {
-            handleClose();
-            fetchEmployees();
-          }} />
+          <AddEmployee
+            onSuccess={() => {
+              handleClose();
+              refetch();
+            }}
+          />
         </Modal.Body>
       </Modal>
+      {showDeleteModal && (
+        <Confirm
+          show={showDeleteModal}
+          loading={loading}
+          title="Confirm deletion"
+          message="Are you sure you want to delete this employee?"
+          onSuccess={() => handleDelete(actionId)}
+          onClose={() => setShowDeleteModal(false)}
+        />
+      )}
+      {showRestoreModal && (
+        <Modal
+          show={showRestoreModal}
+          onHide={() => setShowRestoreModal(false)}
+          size="sm"
+        >
+          <Modal.Body className="bg-darkblue">
+            <Confirm
+              loading={loading}
+              message={"Are you sure you want to Restore this employee?"}
+              onSuccess={() => handleRestore(actionId)}
+              onClose={() => setShowRestoreModal(false)}
+            />
+          </Modal.Body>
+        </Modal>
+      )}
+      {showEmployeeModal && (
+        <Modal
+          show={showEmployeeModal}
+          onHide={() => setShowEmployeeModal(false)}
+          size="xl"
+        >
+          <Modal.Body className="bg-darkblue">
+            <EmployeeDetails
+              id={actionId}
+              isDeleted={fillter === "only_deleted"}
+            />
+          </Modal.Body>
+        </Modal>
+      )}
     </div>
   );
 }

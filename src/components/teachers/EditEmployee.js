@@ -1,61 +1,34 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import React from "react";
+import Operations from "../back_component/Operations";
 
-export default function EditEmployee() {
-  const { id } = useParams();
+export default function EditEmployee({ initialData = {}, onsuccess }) {
+  const { id } = initialData.id;
+  const { request } = Operations();
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState("");
-
-
-  const fakeEmployee = {
-    1: {
-      name: "John Doe",
-      email: "john.doe@gmail.com",
-      phone: "1234567890",
-      dob: "1990-01-01",
-    },
-    2: {
-      name: "Jane Smith",
-      email: "jane.smith@gmail.com",
-      phone: "0987654321",
-      dob: "1985-05-15",
-    },
-    3: {
-      name: "Alice Johnson",
-      email: "alice.johnson@gmail.com",
-      phone: "1112233445",
-      dob: "1987-07-20",
-    },
-    4: {
-      name: "Bob Brown",
-      email: "bob.brown@gmail.com",
-      phone: "6677889900",
-      dob: "1992-11-25",
-    },
-  };
-
+  const [loading, setloading] = useState(false);
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    dob: "",
+    name: initialData.name || "",
+    email: initialData.email || "",
+    phone: initialData.phone || "",
+    dob: initialData.dob || "",
   });
-
-  useEffect(() => {
-    if (fakeEmployee[id]) {
-      setForm(fakeEmployee[id]);
-    }
-  }, [id]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated employee:", form);
-    navigate(-1);
+    // try {
+    //   const res = await request.put("")
+    // } catch (Err) {
+    //   console.error(Err);
+    // }
+    // console.log("Updated employee:", form);
+    // onsuccess();
+    console.log(form);
   };
 
   return (
@@ -117,10 +90,10 @@ export default function EditEmployee() {
             >
               <h4 className="mb-0">Edit Employee Information</h4>
               {successMessage && (
-               <div className="alert alert-success mt-3 mb-0" role="alert">
-                 {successMessage}
-               </div>
-                )}
+                <div className="alert alert-success mt-3 mb-0" role="alert">
+                  {successMessage}
+                </div>
+              )}
             </div>
             <div className="card-body" style={{ color: "#1E3A5F" }}>
               <form onSubmit={handleSubmit}>

@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
 import Operations from "../back_component/Operations";
 
-export default function AddHolidayPage({ onClose, onSuccess }) {
+export default function AddLanguage({ onClose }) {
   const [formData, setFormData] = useState({
     name: "",
-    startDate: "",
-    endDate: "",
     description: "",
   });
 
@@ -18,10 +16,8 @@ export default function AddHolidayPage({ onClose, onSuccess }) {
   const { request } = Operations();
 
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -33,24 +29,19 @@ export default function AddHolidayPage({ onClose, onSuccess }) {
 
     const data = {
       Name: formData.name,
-      StartDate: formData.startDate,
-      EndDate: formData.endDate,
       Description: formData.description,
     };
 
     try {
-      const res = await request.post("super-admin/addHoliday", data);
-      setSuccess("The holiday has been added successfully!");
+      const res = await request.post("super-admin/addLanguage", data);
+      setSuccess("The Language has been added successfully!");
       setFormData({
         name: "",
-        startDate: "",
-        endDate: "",
         description: "",
       });
-      if (onClose) onClose();
-      if (onSuccess) onSuccess();
+      onClose();
     } catch (err) {
-      console.error("Error in addHoliday:", err.response || err.message);
+      console.error("Error in addLanguage:", err.response || err.message);
       if (err.response) {
         if (err.response.status === 422) {
           setErrors(err.response.data.errors);
@@ -70,16 +61,11 @@ export default function AddHolidayPage({ onClose, onSuccess }) {
   };
 
   const onCancel = () => {
-    setFormData({
-      name: "",
-      startDate: "",
-      endDate: "",
-      description: "",
-    });
+    setFormData({ name: "", description: "" });
     setErrors({});
     setSuccess("");
     setErrorMsg("");
-    if (onClose) onClose(); // ✅ إغلاق المودال عند الإلغاء
+    if (onClose) onClose();
   };
 
   return (
@@ -87,14 +73,14 @@ export default function AddHolidayPage({ onClose, onSuccess }) {
       {success && <Alert variant="success">{success}</Alert>}
       {errorMsg && <Alert variant="danger">{errorMsg}</Alert>}
 
-      <Form.Group className="mb-3" controlId="holidayName">
-        <Form.Label>Holiday Name</Form.Label>
+      <Form.Group className="mb-3" controlId="languageName">
+        <Form.Label>Language Name</Form.Label>
         <Form.Control
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="Enter holiday name..."
+          placeholder="Enter language name..."
           required
           className="rounded"
           isInvalid={!!errors.Name}
@@ -105,49 +91,16 @@ export default function AddHolidayPage({ onClose, onSuccess }) {
         </Form.Control.Feedback>
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="startDate">
-        <Form.Label>Start Date</Form.Label>
-        <Form.Control
-          type="date"
-          name="startDate"
-          value={formData.startDate}
-          onChange={handleChange}
-          required
-          className="rounded"
-          isInvalid={!!errors.StartDate}
-          disabled={loading}
-        />
-        <Form.Control.Feedback type="invalid">
-          {errors.StartDate}
-        </Form.Control.Feedback>
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="endDate">
-        <Form.Label>End Date</Form.Label>
-        <Form.Control
-          type="date"
-          name="endDate"
-          value={formData.endDate}
-          onChange={handleChange}
-          required
-          className="rounded"
-          isInvalid={!!errors.EndDate}
-          disabled={loading}
-        />
-        <Form.Control.Feedback type="invalid">
-          {errors.EndDate}
-        </Form.Control.Feedback>
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="description">
+      <Form.Group className="mb-3" controlId="languageDescription">
         <Form.Label>Description</Form.Label>
         <Form.Control
           as="textarea"
-          rows={3}
+          rows={2}
           name="description"
           value={formData.description}
           onChange={handleChange}
-          placeholder="Enter holiday description (optional)..."
+          placeholder="Enter a short description..."
+          required
           className="rounded"
           isInvalid={!!errors.Description}
           disabled={loading}
@@ -167,7 +120,7 @@ export default function AddHolidayPage({ onClose, onSuccess }) {
               <Spinner animation="border" size="sm" /> Adding...
             </>
           ) : (
-            "Add Holiday"
+            "Add Language"
           )}
         </Button>
       </div>

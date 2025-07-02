@@ -2,6 +2,7 @@ import { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import Operations from "../back_component/Operations";
 import "./Login.css";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,7 +11,7 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState("");
   const [formError, setFormError] = useState("");
   const { request, setToken } = Operations();
-  const [error, setError] = useState("");
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === "email") {
@@ -22,30 +23,36 @@ export default function Login() {
     }
   };
 
-  const submitForm = (e) => {
-    setIsSubmitting(true);
+  const submitForm = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setFormError("");
 
-    // للتحقق من صحة البيانات
-    if (email === "" || password === "") {
-      setError("Please fill in both email and password fields.");
+    if (email === "") {
+      setEmailError("Please enter your email");
+      setIsSubmitting(false);
       return;
     }
-    //-----------ارسال الطلب للباك
-    request
-      .post("login", { email: email, password: password })
-      .then((res) => {
-        setFormError("");
-        setToken(res.data.user, res.data.token);
-      })
-      .catch(function (error) {
-        console.log(error);
-        //في حال كان السيرفر متوقف
-        if (error.code == "ERR_NETWORK") setFormError(error.message);
-        else setFormError("error in email or password");
-        setIsSubmitting(false);
-      });
-    //-----------------------
+    if (password === "") {
+      setPasswordError("Please enter your password");
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const res = await request.post("login", { email, password });
+      setToken(res.data.user, res.data.token);
+    } catch (error) {
+      console.error(error);
+      if (error.response && error.response.status === 401) {
+        setFormError("بيانات الدخول غير صحيحة");
+      } else if (error.code === "ERR_NETWORK") {
+        setFormError("تعذر الاتصال بالخادم");
+      } else {
+        setFormError("حدث خطأ أثناء تسجيل الدخول");
+      }
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -57,7 +64,7 @@ export default function Login() {
             <p className="login-subtext">Please login to your account</p>
           </div>
 
-          <form>
+          <form onSubmit={submitForm}>
             <div className="mb-4">
               <input
                 type="email"
@@ -94,9 +101,8 @@ export default function Login() {
 
             <div className="d-grid mb-3">
               <button
-                type="button"
+                type="submit"
                 className="btn login-btn"
-                onClick={submitForm}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Logging in..." : "Login"}
