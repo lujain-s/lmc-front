@@ -74,7 +74,9 @@ const customOption = (props) => {
 };
 
 const ContactPage = () => {
-  const { request } = Operations();
+  const { request, getUser } = Operations();
+  const user = getUser();
+  const isAdmin = user && user.role === "SuperAdmin";
   const [showModal, setShowModal] = useState(false);
   const [isNew, setIsNew] = useState(false);
   const [cotacts, setContacts] = useState([]);
@@ -162,30 +164,32 @@ const ContactPage = () => {
   };
   return (
     <div className="contact-wrapper d-flex flex-column align-items-center">
-      <button
-        className="btn rounded-circle"
-        style={{
-          position: "fixed",
-          bottom: "60px",
-          right: "30px",
-          width: "60px",
-          height: "60px",
-          fontSize: "30px",
-          backgroundColor: "#1E3A5F",
-          borderColor: "#1E3A5F",
-          color: "#fff",
-          boxShadow: "0 4px 8px #1E3A5F",
-          zIndex: 1050,
-          border: "none",
-        }}
-        onClick={() => {
-          setShowModal(true);
-          setIsNew(true);
-        }}
-        aria-label="Add Language"
-      >
-        +
-      </button>
+      {isAdmin && (
+        <button
+          className="btn rounded-circle"
+          style={{
+            position: "fixed",
+            bottom: "60px",
+            right: "30px",
+            width: "60px",
+            height: "60px",
+            fontSize: "30px",
+            backgroundColor: "#1E3A5F",
+            borderColor: "#1E3A5F",
+            color: "#fff",
+            boxShadow: "0 4px 8px #1E3A5F",
+            zIndex: 1050,
+            border: "none",
+          }}
+          onClick={() => {
+            setShowModal(true);
+            setIsNew(true);
+          }}
+          aria-label="Add Language"
+        >
+          +
+        </button>
+      )}
       <Container className="contact-page col-10 col-md-7 text-center my-5 p-4 shadow-lg rounded-4">
         <h2 className="mb-3 section-title">Accounts and Numbers</h2>
         <p className="sub-title">طرق التواصل مع المعهد</p>
@@ -213,32 +217,34 @@ const ContactPage = () => {
                       </span>{" "}
                       <span>{item.title}</span>
                     </a>{" "}
-                    <div className="d-flex gap-1">
-                      <button
-                        className="button-blue"
-                        style={{ padding: "6px 12px", fontSize: 18 }}
-                        onClick={() => {
-                          setOpenDelete(true);
-                          setDeletedId(item.id);
-                        }}
-                      >
-                        <FaTrash />
-                      </button>
-                      <button
-                        className="button-orange"
-                        style={{ padding: "6px 12px", fontSize: 18 }}
-                        onClick={() => {
-                          setIsNew(false);
-                          setSelectedService(item);
-                          setTitle(item.title);
-                          setDescription(item.description);
-                          setPhoto(item.photo);
-                          setShowModal(true);
-                        }}
-                      >
-                        <FaEdit />
-                      </button>
-                    </div>
+                    {isAdmin && (
+                      <div className="d-flex gap-1">
+                        <button
+                          className="button-blue"
+                          style={{ padding: "6px 12px", fontSize: 18 }}
+                          onClick={() => {
+                            setOpenDelete(true);
+                            setDeletedId(item.id);
+                          }}
+                        >
+                          <FaTrash />
+                        </button>
+                        <button
+                          className="button-orange"
+                          style={{ padding: "6px 12px", fontSize: 18 }}
+                          onClick={() => {
+                            setIsNew(false);
+                            setSelectedService(item);
+                            setTitle(item.title);
+                            setDescription(item.description);
+                            setPhoto(item.photo);
+                            setShowModal(true);
+                          }}
+                        >
+                          <FaEdit />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

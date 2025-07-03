@@ -14,7 +14,7 @@ function Guest() {
   return (
     <div className="guest-layout">
       <Navbar />
-      <div className="content-container ">
+      <div className="content-container " style={{ width: "100%" }}>
         <div className="container main text-center mt-5 ">
           <Routes>
             <Route path="/" element={<Home />} />

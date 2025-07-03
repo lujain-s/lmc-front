@@ -43,13 +43,22 @@ const Navbar = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
-              {getUser() && (
+              {getUser() ? (
                 <li className="nav-item">
                   <Link
                     onClick={logout}
                     className="nav-link d-flex align-items-center"
                   >
                     <FaSignOutAlt /> <span className="ms-1">Logout</span>
+                  </Link>
+                </li>
+              ) : (
+                <li className="nav-item">
+                  <Link
+                    to={"/login"}
+                    className="nav-link d-flex align-items-center"
+                  >
+                    <FaSignInAlt /> <span className="ms-1">Login</span>
                   </Link>
                 </li>
               )}

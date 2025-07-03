@@ -1,0 +1,49 @@
+# روابط السكرتاريا (Secretary Endpoints)
+POST   /api/secretarya/enroll    جاهز
+POST   /api/secretarya/cancelEnrollment   جاهز
+POST   /api/secretarya/addCourse     جاهز
+POST   /api/secretarya/editCourse   جاهز
+DELETE /api/secretarya/deleteCourse/{id}   جاهز
+GET    /api/secretarya/showRooms   جاهز
+GET    /api/secretarya/viewAvailableRooms  جاهز
+GET    /api/secretarya/viewReservedRooms   جاهز
+GET    /api/secretarya/viewEnrolledStudentsInCourse/{id}  جاهز
+GET    /api/secretarya/getAllEnrolledStudents  ليس له ضرورة
+GET    /api/secretarya/showInvoice/{id}  جاهز
+POST   /api/secretarya/addAnnouncement   جاهز
+POST   /api/secretarya/updateAnnouncement/{id}  جاهز
+DELETE /api/secretarya/deleteAnnouncement/{id}   جاهز
+POST   /api/secretarya/addLanguageToLibrary    ؟؟؟؟؟
+POST   /api/secretarya/uploadFile        ؟؟؟؟
+POST   /api/secretarya/editFileInLibrary/{id}   ؟؟؟؟
+DELETE /api/secretarya/deleteFileInLibrary/{id}   ؟؟؟
+DELETE /api/secretarya/deleteLibraryForLanguage/{id}  ؟؟؟
+POST   /api/secretarya/respondToRequestIndividualCourse/{id}
+GET    /api/secretarya/getTeachers  جاهز
+GET    /api/secretarya/showAllInvoices  جاهز
+GET    /api/secretarya/getGuestStudent  جاهز
+GET    /api/secretarya/showAllIndividualRequest ؟؟؟
+
+# روابط للجميع (ForAll Endpoints)
+GET    /api/showLanguage/{id} جاهز
+GET    /api/showAllLanguage  جاهز
+GET    /api/getAnnouncement/{id}  جاهز
+GET    /api/getAllAnnouncements  جاهز
+GET    /api/viewCourses  جاهز
+GET    /api/viewCourse/{id}  جاهز
+GET    /api/viewCourseDetails/{id} جاهز
+GET    /api/getCourseLessons/{id} جاهز
+GET    /api/getFilesByLanguage/{id} ؟؟؟
+GET    /api/getLanguagesThatHaveLibrary ؟؟؟
+GET    /api/downloadFile/{id} ؟؟؟
+GET    /api/viewLMCInfo جاهز
+GET    /api/getHoliday  جاهز
+POST   /api/sendNotification
+GET    /api/showAllPage?is_contact=1 جاهز
+GET    /api/showPage/{id}  جاهز
+
+# روابط الستاف (Staff Endpoints)
+POST   /api/staff/completeUserTask/{id}  جاهز
+POST   /api/staff/editMyInfo  جاهز
+POST   /api/staff/removeMyInfo ليس له ضرورة
+GET    /api/staff/myTasks  جاهز

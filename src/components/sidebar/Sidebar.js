@@ -111,7 +111,11 @@ const Sidebar = () => {
   } else if (isSecretary) {
     tabs = [
       { to: "/", icon: "columns", label: "Home" },
+      { to: "/about", icon: "info-circle", label: "About" },
+      { to: "/services", icon: "concierge-bell", label: "Services" },
+      { to: "/contact", icon: "phone", label: "Contact" },
       { to: "/rooms", icon: "school", label: "Clases" },
+      { to: "/courses-date", icon: "clock", label: "Courses date" },
       { to: "/profile", icon: "user", label: "Profile page" },
       { to: "/student-list", icon: "users", label: "Student List" },
       { to: "/announcements", icon: "bullhorn", label: "Announcements" },
