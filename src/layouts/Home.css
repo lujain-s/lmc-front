@@ -6,3 +6,17 @@
 .main {
   flex: 1;
 }
+
+.guest-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.guest-layout .content-container {
+  flex: 1 0 auto;
+}
+
+.guest-layout footer {
+  flex-shrink: 0;
+}

@@ -5,6 +5,18 @@ import { Modal } from "react-bootstrap";
 import { QueryClient, useQuery } from "@tanstack/react-query";
 import Operations from "../back_component/Operations";
 import Confirm from "../ui/confirmMessage";
+import "../../styles/colors.css";
+import {
+  FaHashtag,
+  FaBook,
+  FaUser,
+  FaClock,
+  FaCalendar,
+  FaInfoCircle,
+  FaTrash,
+  FaPen,
+  FaEye,
+} from "react-icons/fa";
 
 export default function CourseSchedule() {
   const { request } = Operations();
@@ -89,7 +101,7 @@ export default function CourseSchedule() {
     if (filteredCourses.length === 0) {
       return (
         <tr>
-          <td colSpan="6" className="text-center text-danger">
+          <td colSpan="6" className="text-center ">
             No courses found
           </td>
         </tr>
@@ -103,7 +115,7 @@ export default function CourseSchedule() {
         <tr key={course.id}>
           <td>{index + 1}</td>
           <td>{course.language?.Name || "No name"}</td>
-          <td style={{ color: "#007bff", fontWeight: "bold" }}>
+          <td style={{ color: "var(--primary-color)", fontWeight: "bold" }}>
             {course.user?.name || "Unknown"}
           </td>
           <td>
@@ -120,25 +132,31 @@ export default function CourseSchedule() {
           <td>
             <Link
               to={`/course-details/${course.id}`}
-              className="btn btn-primary"
-              style={{ backgroundColor: "#1E3A5F", borderColor: "#1E3A5F" }}
+              className="button-blue me-1"
+              style={{
+                padding: "4px 14px",
+                borderRadius: "4px",
+                fontWeight: 600,
+              }}
             >
-              View
+              <FaEye />
             </Link>
             <button
-              className="btn btn-danger mx-1 text-light"
+              className="button-blue me-1"
+              style={{ padding: "4px 12px", fontSize: 18 }}
               onClick={() => {
                 setShowModal("delete");
                 setActionId(course.id);
               }}
             >
-              <i className="fa fa-trash" />
+              <FaTrash />
             </button>
             <button
-              className="btn btn-warning text-light"
+              className="button-orange"
+              style={{ padding: "4px 12px", fontSize: 18 }}
               onClick={() => handleEdit(course)}
             >
-              <i className="fa fa-pen" />
+              <FaPen />
             </button>
           </td>
         </tr>
@@ -151,7 +169,7 @@ export default function CourseSchedule() {
       <div className="pt-5 pb-5 mt-5">
         <h1
           className="text-center text-uppercase"
-          style={{ letterSpacing: "5px", color: "#FF7F00" }}
+          style={{ letterSpacing: "5px", color: "#FF7F00", fontWeight: 700 }}
         >
           Course Schedule
         </h1>
@@ -175,22 +193,28 @@ export default function CourseSchedule() {
             <table className="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <th>#</th>
                   <th>
-                    Course Language <i className="fa fa-book"></i>
+                    <FaHashtag className="me-2" />#
                   </th>
                   <th>
-                    Teacher Name <i className="fa fa-user"></i>
+                    <FaBook className="me-2" />
+                    Course Language
                   </th>
                   <th>
-                    Time <i className="fa fa-clock"></i>
+                    <FaUser className="me-2" />
+                    Teacher Name
                   </th>
                   <th>
-                    Date <i className="fa fa-calendar"></i>
+                    <FaClock className="me-2" />
+                    Time
                   </th>
-
                   <th>
-                    Actions <i className="fa fa-info-circle"></i>
+                    <FaCalendar className="me-2" />
+                    Date
+                  </th>
+                  <th>
+                    <FaInfoCircle className="me-2" />
+                    Actions
                   </th>
                 </tr>
               </thead>
@@ -226,14 +250,58 @@ export default function CourseSchedule() {
 
       <style>
         {`
-                   input.form-control:focus,
-                select.form-control:focus,
-                textarea.form-control:focus {
-                  border-color: #FF7F00 !important;
-                  box-shadow: 0 0 8px #FF7F00 !important;
-                  outline: none;
-                }
-                `}
+          th, td {
+            color: #1E3A5F !important;
+          }
+          .button-blue {
+            background-color: #1E3A5F;
+            border: none;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 6px 18px;
+            transition: background 0.2s;
+          }
+          .button-blue:hover,
+          .button-blue:focus {
+            background-color: #FF7F00 !important;
+            color: #fff !important;
+            border: none !important;
+          }
+          .button-orange {
+            background-color: #FF7F00;
+            border: none;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 6px 18px;
+            transition: background 0.2s;
+          }
+          .button-orange:hover,
+          .button-orange:focus {
+            background-color: #1E3A5F !important;
+            color: #fff !important;
+            border: none !important;
+          }
+          .button-blue svg,
+          .button-orange svg {
+            color: #fff !important;
+            transition: color 0.2s;
+          }
+          .button-blue:hover svg,
+          .button-blue:focus svg,
+          .button-orange:hover svg,
+          .button-orange:focus svg {
+            color: var(--primary-color) !important;
+          }
+          input.form-control:focus,
+           select.form-control:focus,
+           textarea.form-control:focus {
+             border-color: #FF7F00 !important;
+             box-shadow: 0 0 8px #FF7F00 !important;
+             outline: none;
+           }
+           `}
       </style>
 
       <Modal

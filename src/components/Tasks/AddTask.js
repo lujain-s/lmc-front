@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Operations from "../back_component/Operations";
+import "../../styles/colors.css";
 
 const AddTask = ({ onSubmit }) => {
   const { request } = Operations();
@@ -112,6 +113,7 @@ const AddTask = ({ onSubmit }) => {
           placeholder="Enter task description..."
           isInvalid={!!errors.Description}
           required
+          className="form-control"
         />
         <Form.Control.Feedback type="invalid">
           {errors.Description}
@@ -127,6 +129,7 @@ const AddTask = ({ onSubmit }) => {
           onChange={handleChange}
           isInvalid={!!errors.Deadline}
           required
+          className="form-control"
         />
         <Form.Control.Feedback type="invalid">
           {errors.Deadline}
@@ -145,7 +148,6 @@ const AddTask = ({ onSubmit }) => {
 
       <Form.Group className="mb-3" controlId="roleId">
         <Form.Label>Role ID</Form.Label>
-
         <select
           value={form.role_id}
           onChange={(e) => setForm({ ...form, role_id: e.target.value })}
@@ -186,7 +188,12 @@ const AddTask = ({ onSubmit }) => {
       </Form.Group>
 
       <div className="d-flex justify-content-end">
-        <Button className="custom-btn" type="submit" disabled={loading}>
+        <Button
+          className="button-blue px-5"
+          type="submit"
+          disabled={loading}
+          style={{ fontWeight: 600, fontSize: 18 }}
+        >
           {loading ? (
             <>
               <Spinner animation="border" size="sm" /> Saving...
@@ -196,6 +203,15 @@ const AddTask = ({ onSubmit }) => {
           )}
         </Button>
       </div>
+      <style>{`
+        input.form-control:focus,
+        select.form-control:focus,
+        textarea.form-control:focus {
+          border-color: #FF7F00 !important;
+          box-shadow: 0 0 8px #FF7F00 !important;
+          outline: none;
+        }
+      `}</style>
     </Form>
   );
 };

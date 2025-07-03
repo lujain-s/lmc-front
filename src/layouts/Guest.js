@@ -9,11 +9,12 @@ import Login from "../components/login/Login.js";
 import About from "../components/services/About.js";
 import Footer from "../components/footer/footer.js";
 import "./Home.css";
+
 function Guest() {
   return (
-    <div className="d-flex">
-      <div className="content-container  flex-grow-1">
-        <Navbar />
+    <div className="guest-layout">
+      <Navbar />
+      <div className="content-container ">
         <div className="container main text-center mt-5 ">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -24,8 +25,8 @@ function Guest() {
             holidays
           </Routes>
         </div>
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 }

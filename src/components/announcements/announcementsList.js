@@ -4,6 +4,7 @@ import AdsCard from "./announcementsCard";
 import { useQuery } from "@tanstack/react-query";
 import { Modal, Button, Form } from "react-bootstrap";
 import Confirm from "../ui/confirmMessage";
+import "../../styles/colors.css";
 
 export default function Announcements() {
   const { request } = Operations();
@@ -17,6 +18,7 @@ export default function Announcements() {
   const [Title, setTitle] = useState("");
   const [Content, setContent] = useState("");
   const [Media, setMedia] = useState("");
+  const [previewImage, setPreviewImage] = useState(null);
 
   const fetchAds = async () => {
     const res = await request.get("getAllAnnouncements");
@@ -44,6 +46,7 @@ export default function Announcements() {
     setTitle("");
     setContent("");
     setMedia("");
+    setPreviewImage(null);
     setShowModal(true);
   };
 
@@ -53,6 +56,7 @@ export default function Announcements() {
     setTitle(ad.Title);
     setContent(ad.Content);
     setMedia(ad.Media);
+    setPreviewImage(ad.Media || null);
     setShowModal(true);
   };
 
@@ -93,6 +97,7 @@ export default function Announcements() {
       setTitle("");
       setContent("");
       setMedia("");
+      setPreviewImage(null);
       refetch();
     } catch (err) {
       console.error("خطأ أثناء الإرسال:", err);
@@ -118,41 +123,50 @@ export default function Announcements() {
   if (isError) return <div className="text-center">{error.message}</div>;
 
   return (
-    <div className="d-flex flex-wrap align-items-center justify-content-center py-4 container gap-3">
-      <button
-        className="btn rounded-circle"
-        style={{
-          position: "fixed",
-          bottom: "60px",
-          right: "30px",
-          width: "60px",
-          height: "60px",
-          fontSize: "30px",
-          backgroundColor: "#1E3A5F",
-          borderColor: "#1E3A5F",
-          color: "#fff",
-          boxShadow: "0 4px 8px #1E3A5F",
-          zIndex: 1050,
-          border: "none",
-        }}
-        onClick={openAddModal}
-        aria-label="Add Announcement"
-      >
-        +
-      </button>
+    <div className="bg-light min-vh-100 py-5">
+      <div className="container">
+        <h1
+          className="text-center text-uppercase mb-5"
+          style={{ letterSpacing: "5px", color: "#FF7F00", fontWeight: 700 }}
+        >
+          Announcements
+        </h1>
+        <div className="d-flex flex-wrap align-items-stretch justify-content-center gap-3">
+          <button
+            className="btn rounded-circle"
+            style={{
+              position: "fixed",
+              bottom: "60px",
+              right: "30px",
+              width: "60px",
+              height: "60px",
+              fontSize: "30px",
+              backgroundColor: "#1E3A5F",
+              borderColor: "#1E3A5F",
+              color: "#fff",
+              boxShadow: "0 4px 8px #1E3A5F",
+              zIndex: 1050,
+              border: "none",
+            }}
+            onClick={openAddModal}
+            aria-label="Add Announcement"
+          >
+            +
+          </button>
 
-      {adds.map((item) => (
-        <AdsCard
-          key={item.id}
-          item={item}
-          onEdit={openEditModal}
-          onDelete={(id) => {
-            setopenDelete(true);
-            setdeleted(id);
-          }}
-        />
-      ))}
-
+          {adds.map((item) => (
+            <AdsCard
+              key={item.id}
+              item={item}
+              onEdit={openEditModal}
+              onDelete={(id) => {
+                setopenDelete(true);
+                setdeleted(id);
+              }}
+            />
+          ))}
+        </div>
+      </div>
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header
           closeButton
@@ -171,6 +185,7 @@ export default function Announcements() {
                 value={Title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
+                className="form-control"
               />
             </Form.Group>
 
@@ -182,6 +197,7 @@ export default function Announcements() {
                 value={Content}
                 onChange={(e) => setContent(e.target.value)}
                 required
+                className="form-control"
               />
             </Form.Group>
 
@@ -190,18 +206,54 @@ export default function Announcements() {
               <Form.Control
                 type="file"
                 accept="image/*,video/*"
-                onChange={(e) => setMedia(e.target.files[0])}
+                onChange={(e) => {
+                  setMedia(e.target.files[0]);
+                  if (e.target.files && e.target.files[0]) {
+                    setPreviewImage(URL.createObjectURL(e.target.files[0]));
+                  } else {
+                    setPreviewImage(null);
+                  }
+                }}
                 required={!isEditing}
+                className="form-control"
               />
+              {previewImage && (
+                <div className="mt-3 text-center">
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    style={{
+                      maxWidth: "180px",
+                      maxHeight: "140px",
+                      borderRadius: "12px",
+                      border: "3px solid var(--primary-color)",
+                      boxShadow: "0 2px 8px #eee",
+                    }}
+                  />
+                </div>
+              )}
             </Form.Group>
 
             <div className="text-end">
-              <Button type="submit" variant="primary">
+              <Button
+                type="submit"
+                className="button-blue px-5"
+                style={{ fontWeight: 600, fontSize: 18 }}
+              >
                 {loading ? "Loading..." : isEditing ? "Save" : "Add"}
               </Button>
             </div>
           </Form>
         </Modal.Body>
+        <style>{`
+          input.form-control:focus,
+          select.form-control:focus,
+          textarea.form-control:focus {
+            border-color: #FF7F00 !important;
+            box-shadow: 0 0 8px #FF7F00 !important;
+            outline: none;
+          }
+        `}</style>
       </Modal>
       <Confirm
         show={openDelete}

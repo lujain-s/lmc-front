@@ -2,6 +2,14 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Operations from "../back_component/Operations";
 import { useQuery } from "@tanstack/react-query";
+import {
+  FaHashtag,
+  FaUser,
+  FaEnvelope,
+  FaCalendarAlt,
+  FaInfoCircle,
+  FaEye,
+} from "react-icons/fa";
 
 export default function ComplaintList() {
   const { request } = Operations();
@@ -56,7 +64,7 @@ export default function ComplaintList() {
     <div className="pt-5 pb-5 mt-5">
       <h1
         className="text-center text-uppercase"
-        style={{ letterSpacing: "5px", color: "#FF7F00" }}
+        style={{ letterSpacing: "5px", color: "#FF7F00", fontWeight: 700 }}
       >
         Complaint List
       </h1>
@@ -75,31 +83,31 @@ export default function ComplaintList() {
         />
         <br />
         <div className="table-responsive card2 p-0 container mt-4">
-          <div className="flex gap-2">
+          <div className="flex gap-2" style={{ marginBottom: 18 }}>
             <button
-              className={`btn btn-outline-primary ${
-                fillter === "showAllComplaint" ? "bg-primary text-light" : ""
-              }`}
+              className={
+                fillter === "showAllComplaint" ? "button-orange" : "button-blue"
+              }
               onClick={() => setFillter("showAllComplaint")}
             >
               All
             </button>
             <button
-              className={`btn mx-2 btn-outline-primary ${
+              className={
                 fillter === "showPendingComplaints"
-                  ? "bg-primary text-light"
-                  : ""
-              }`}
+                  ? "button-orange mx-2"
+                  : "button-blue mx-2"
+              }
               onClick={() => setFillter("showPendingComplaints")}
             >
               Pending
             </button>
             <button
-              className={`btn btn-outline-primary ${
+              className={
                 fillter === "showSolvedComplaints"
-                  ? "bg-primary text-light"
-                  : ""
-              }`}
+                  ? "button-orange"
+                  : "button-blue"
+              }
               onClick={() => setFillter("showSolvedComplaints")}
             >
               Solved
@@ -108,21 +116,28 @@ export default function ComplaintList() {
           <table className="table mb-0 table-bordered table-striped">
             <thead>
               <tr>
-                <th style={{ color: "#1E3A5F" }}># </th>
                 <th style={{ color: "#1E3A5F" }}>
-                  Teacher Name <i className="fa fa-user"></i>
+                  <FaHashtag className="me-2" />#
                 </th>
                 <th style={{ color: "#1E3A5F" }}>
-                  Teacher Email <i className="fa fa-envelope"></i>{" "}
+                  <FaUser className="me-2" />
+                  Teacher Name
                 </th>
                 <th style={{ color: "#1E3A5F" }}>
-                  Date <i className="fa fa-calendar-alt"></i>
+                  <FaEnvelope className="me-2" />
+                  Teacher Email
                 </th>
                 <th style={{ color: "#1E3A5F" }}>
-                  Status <i className="fa fa-info-circle"></i>
+                  <FaCalendarAlt className="me-2" />
+                  Date
                 </th>
                 <th style={{ color: "#1E3A5F" }}>
-                  Details <i className="fa fa-eye"></i>
+                  <FaInfoCircle className="me-2" />
+                  Status
+                </th>
+                <th style={{ color: "#1E3A5F" }}>
+                  <FaEye className="me-2" />
+                  Details
                 </th>
               </tr>
             </thead>
@@ -137,12 +152,11 @@ export default function ComplaintList() {
                   <td>
                     <Link
                       to={`/complaint-details/${item.id}`}
-                      className="btn btn-sm"
+                      className="button-blue"
                       style={{
-                        color: "#fff",
-                        backgroundColor: "#1E3A5F",
-                        padding: "4px 10px",
+                        padding: "4px 14px",
                         borderRadius: "4px",
+                        fontWeight: 600,
                       }}
                     >
                       View
@@ -161,14 +175,33 @@ export default function ComplaintList() {
           </table>
           <style>
             {`
-                   input.form-control:focus,
-                select.form-control:focus,
-                textarea.form-control:focus {
-                  border-color: #FF7F00 !important;
-                  box-shadow: 0 0 8px #FF7F00 !important;
-                  outline: none;
-                }
-                `}
+              .button-blue {
+                background-color: #1E3A5F;
+                border: none;
+                color: #fff;
+                font-weight: bold;
+                border-radius: 8px;
+                padding: 6px 18px;
+                transition: background 0.2s;
+              }
+              .button-blue:hover,
+              .button-blue:focus,
+              .button-orange:hover,
+              .button-orange:focus {
+                border: none !important;
+              }
+              input.form-control:focus,
+              select.form-control:focus,
+              textarea.form-control:focus {
+                border-color: #FF7F00 !important;
+                box-shadow: 0 0 8px #FF7F00 !important;
+                outline: none;
+              }
+              .button-blue,
+              .button-orange {
+                border-radius: 8px !important;
+              }
+              `}
           </style>
         </div>
       </div>

@@ -30,6 +30,7 @@
   background-color: var(--primary-color) !important;
   color: var(--white-color) !important;
   text-align: center;
+  margin-top: 20px;
   font-size: 18px;
   border-radius: 20px;
 }
@@ -46,30 +47,50 @@
 }
 
 /* عند تمرير الماوس */
-.sidebar-content .side-item:hover {
-  background-color: var(--primary-color);
+.sidebar-content .side-item:hover,
+.sidebar-content .side-item.active {
+  background-color: var(--primary-color) !important;
   color: var(--white-color) !important;
+  border-radius: 10px;
+}
+
+/* تنسيق إضافي للعنصر النشط */
+.sidebar-content .side-item.active {
+  background-color: var(--primary-color) !important;
+  color: var(--white-color) !important;
+  border-radius: 10px;
 }
 
 /* تلوين محتوى العنصر عند تمرير الماوس */
-.sidebar-content .side-item:hover .cdb-sidebar-menu-item {
+.sidebar-content .side-item:hover .cdb-sidebar-menu-item,
+.sidebar-content .side-item.active .cdb-sidebar-menu-item {
   color: var(--white-color) !important;
+  border-radius: 10px;
+}
+
+/* تنسيق إضافي للعناصر الداخلية في العنصر النشط */
+.sidebar-content .side-item.active .cdb-sidebar-menu-item {
+  color: var(--white-color) !important;
+  border-radius: 10px;
 }
 
 /* عند الضغط بالماوس */
 .sidebar-content .side-item:active {
   background-color: var(--primary-color);
   color: var(--white-color) !important;
+  border-radius: 10px;
 }
 
 /* العنصر النشط حاليًا */
 .sidebar-content .activeClicked {
   background-color: var(--primary-color) !important;
   color: var(--white-color) !important;
+  border-radius: 10px;
 }
 
 .sidebar-content .activeClicked .cdb-sidebar-menu-item {
   color: var(--white-color) !important;
+  border-radius: 10px;
 }
 
 /* عند تمرير الماوس على العنصر النشط */
@@ -96,4 +117,25 @@
   background-color: var(--primary-color);
   border-radius: 10px;
   border: none;
+}
+
+.sidebar-content .side-item.active > * {
+  background-color: var(--primary-color) !important;
+  color: var(--white-color) !important;
+}
+
+/* الهوفر فقط للعناصر غير النشطة */
+.sidebar-content .side-item:not(.active):hover,
+.sidebar-content .side-item:not(.active):hover > * {
+  background-color: var(--primary-color) !important;
+  color: var(--white-color) !important;
+  border-radius: 12px !important;
+}
+
+/* لون مختلف عند الهوفر على العنصر النشط (اختياري) */
+.sidebar-content .side-item.active,
+.sidebar-content .side-item.active > *,
+.sidebar-content .side-item.active:hover,
+.sidebar-content .side-item.active:hover > * {
+  border-radius: 12px !important;
 }

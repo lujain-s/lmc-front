@@ -11,12 +11,7 @@ export default function AddEmployee({ onSuccess }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [dob, setDob] = useState("");
   const [role_id, setrole_id] = useState("");
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
-  const [global_info, setGlobalInfo] = useState("");
   const [success, setSuccess] = useState(null);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -28,35 +23,10 @@ export default function AddEmployee({ onSuccess }) {
       newErrors.email = "Valid email is required.";
     if (isEmpty(password) || password.length < 6)
       newErrors.password = "Password must be at least 6 characters.";
-    // if (isEmpty(phone) || !isValidPhone(phone)) newErrors.phone = "Valid phone number is required.";
-    if (isEmpty(dob)) newErrors.dob = "Date of birth is required.";
     if (isEmpty(role_id)) newErrors.role_id = "Please select an employee type.";
-    if (!imageFile) newErrors.image = "Please upload an image.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-
-      // إنشاء رابط معاينة جديد مع تحرير الرابط السابق
-      if (imagePreviewUrl) {
-        URL.revokeObjectURL(imagePreviewUrl);
-      }
-      setImagePreviewUrl(URL.createObjectURL(file));
-
-      setErrors((prev) => ({ ...prev, image: "" }));
-    }
-  };
-
-  useEffect(() => {
-    // تنظيف الرابط عند إزالة الصورة أو عند خروج المكون
-    return () => {
-      if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
-    };
-  }, [imagePreviewUrl]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,11 +40,7 @@ export default function AddEmployee({ onSuccess }) {
         formData.append("name", name);
         formData.append("email", email);
         formData.append("password", password);
-        formData.append("phone", phone);
-        formData.append("dob", dob);
         formData.append("role_id", role_id);
-        formData.append("Photo", imageFile);
-        formData.append("Description", global_info);
         const response = await request.post("super-admin/register", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
@@ -83,12 +49,7 @@ export default function AddEmployee({ onSuccess }) {
         setName("");
         setEmail("");
         setPassword("");
-        setPhone("");
-        setDob("");
         setrole_id("");
-        setImageFile(null);
-        setImagePreviewUrl(null);
-        setGlobalInfo("");
         onSuccess();
       } catch (error) {
         setErrors({ general: "Something went wrong. Please try again." });
@@ -155,76 +116,57 @@ export default function AddEmployee({ onSuccess }) {
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
-                {[
-                  {
-                    label: "Name",
-                    value: name,
-                    setter: setName,
-                    type: "text",
-                    error: errors.name,
-                  },
-                  {
-                    label: "Email",
-                    value: email,
-                    setter: setEmail,
-                    type: "email",
-                    error: errors.email,
-                  },
-                  {
-                    label: "Password",
-                    value: password,
-                    setter: setPassword,
-                    type: "password",
-                    error: errors.password,
-                  },
-                  {
-                    label: "Phone Number",
-                    value: phone,
-                    setter: setPhone,
-                    type: "tel",
-                    error: errors.phone,
-                  },
-                  {
-                    label: "Date of Birth",
-                    value: dob,
-                    setter: setDob,
-                    type: "date",
-                    error: errors.dob,
-                  },
-                ].map((field, index) => (
-                  <div className="mb-3 text-start" key={index}>
-                    <label
-                      className="form-label"
-                      tabIndex={0} // للسماح بالتركيز على اللابل
-                      onFocus={(e) =>
-                        (e.currentTarget.style.boxShadow = "0 0 6px #FF7F00")
-                      }
-                      onBlur={(e) => (e.currentTarget.style.boxShadow = "none")}
-                    >
-                      {field.label}
-                    </label>
-                    <input
-                      type={field.type}
-                      value={field.value}
-                      onChange={(e) => field.setter(e.target.value)}
-                      className={`form-control rounded ${
-                        field.error ? "is-invalid" : ""
-                      }`}
-                      placeholder={`Enter ${field.label.toLowerCase()}...`}
-                    />
-                    <div className="invalid-feedback">{field.error}</div>
-                  </div>
-                ))}
-
+                {/* Name */}
                 <div className="mb-3 text-start">
-                  <label
-                    className="form-label"
-                    tabIndex={0}
-                    onFocus={(e) =>
-                      (e.currentTarget.style.boxShadow = "0 0 6px #FF7F00")
-                    }
-                    onBlur={(e) => (e.currentTarget.style.boxShadow = "none")}
-                  >
+                  <label className="form-label" tabIndex={0}>
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className={`form-control rounded ${
+                      errors.name ? "is-invalid" : ""
+                    }`}
+                    placeholder="Enter name..."
+                  />
+                  <div className="invalid-feedback">{errors.name}</div>
+                </div>
+                {/* Email */}
+                <div className="mb-3 text-start">
+                  <label className="form-label" tabIndex={0}>
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={`form-control rounded ${
+                      errors.email ? "is-invalid" : ""
+                    }`}
+                    placeholder="Enter email..."
+                  />
+                  <div className="invalid-feedback">{errors.email}</div>
+                </div>
+                {/* Password */}
+                <div className="mb-3 text-start">
+                  <label className="form-label" tabIndex={0}>
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={`form-control rounded ${
+                      errors.password ? "is-invalid" : ""
+                    }`}
+                    placeholder="Enter password..."
+                  />
+                  <div className="invalid-feedback">{errors.password}</div>
+                </div>
+                {/* Employee Type */}
+                <div className="mb-3 text-start">
+                  <label className="form-label" tabIndex={0}>
                     Employee Type
                   </label>
                   <select
@@ -241,49 +183,6 @@ export default function AddEmployee({ onSuccess }) {
                   </select>
                   <div className="invalid-feedback">{errors.role_id}</div>
                 </div>
-
-                <div className="mb-3 text-start">
-                  <label
-                    className="form-label"
-                    tabIndex={0}
-                    onFocus={(e) =>
-                      (e.currentTarget.style.boxShadow = "0 0 6px #FF7F00")
-                    }
-                    onBlur={(e) => (e.currentTarget.style.boxShadow = "none")}
-                  >
-                    Additional Information
-                  </label>
-                  <textarea
-                    value={global_info}
-                    onChange={(e) => setGlobalInfo(e.target.value)}
-                    className="form-control rounded"
-                    rows="4"
-                    placeholder="Enter additional information..."
-                  ></textarea>
-                </div>
-
-                <div className="mb-3 text-start">
-                  <label
-                    className="form-label"
-                    tabIndex={0}
-                    onFocus={(e) =>
-                      (e.currentTarget.style.boxShadow = "0 0 6px #FF7F00")
-                    }
-                    onBlur={(e) => (e.currentTarget.style.boxShadow = "none")}
-                  >
-                    Upload Image
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className={`form-control rounded ${
-                      errors.image ? "is-invalid" : ""
-                    }`}
-                  />
-                  <div className="invalid-feedback">{errors.image}</div>
-                </div>
-
                 <button
                   type="submit"
                   className="w-100 rounded py-2 btn"
@@ -310,27 +209,6 @@ export default function AddEmployee({ onSuccess }) {
             </div>
           </div>
         </div>
-
-        {imagePreviewUrl && (
-          <div className="col-md-4 py-5">
-            <div className="card shadow border-0 rounded-4">
-              <div className="card-body text-center">
-                <h5 className="text-dark mb-4">Image Preview</h5>
-                <img
-                  src={imagePreviewUrl}
-                  alt="Preview"
-                  className="rounded-circle shadow"
-                  style={{
-                    width: "180px",
-                    height: "180px",
-                    objectFit: "cover",
-                    border: "4px solid #1E3A5F",
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -43,32 +43,13 @@ const Navbar = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
-              {menuItems.map(({ path, icon, label }, index) => (
-                <li className="nav-item" key={index}>
-                  <Link
-                    to={path}
-                    className="nav-link d-flex align-items-center"
-                  >
-                    {icon} <span className="ms-1">{label}</span>
-                  </Link>
-                </li>
-              ))}
-              {getUser() == null ? (
-                <li className="nav-item" key={5}>
-                  <Link
-                    to={"/login"}
-                    className="nav-link d-flex align-items-center"
-                  >
-                    {<FaSignInAlt />} <span className="ms-1">{"Login"}</span>
-                  </Link>
-                </li>
-              ) : (
-                <li className="nav-item" key={5}>
+              {getUser() && (
+                <li className="nav-item">
                   <Link
                     onClick={logout}
                     className="nav-link d-flex align-items-center"
                   >
-                    {<FaSignOutAlt />} <span className="ms-1">{"logout"}</span>
+                    <FaSignOutAlt /> <span className="ms-1">Logout</span>
                   </Link>
                 </li>
               )}

@@ -215,7 +215,8 @@ const ContactPage = () => {
                     </a>{" "}
                     <div className="d-flex gap-1">
                       <button
-                        className="btn btn-outline-danger"
+                        className="button-blue"
+                        style={{ padding: "6px 12px", fontSize: 18 }}
                         onClick={() => {
                           setOpenDelete(true);
                           setDeletedId(item.id);
@@ -224,7 +225,8 @@ const ContactPage = () => {
                         <FaTrash />
                       </button>
                       <button
-                        className="btn btn-outline-warning"
+                        className="button-orange"
+                        style={{ padding: "6px 12px", fontSize: 18 }}
                         onClick={() => {
                           setIsNew(false);
                           setSelectedService(item);

@@ -127,11 +127,10 @@ const About = () => {
                 {/* زر التعديل */}
                 {isAdmin && (
                   <Button
-                    variant="dark"
-                    className="mt-3"
+                    className="mt-3 button-blue"
                     onClick={() => setShowModal(true)}
                   >
-                    تعديل المعلومات
+                    Edit info
                   </Button>
                 )}
               </div>
@@ -145,7 +144,7 @@ const About = () => {
         <Modal.Header
           closeButton
           style={{
-            backgroundColor: "#0d3c6e",
+            backgroundColor: "#1E3A5F",
             color: "white",
             borderBottom: "none",
           }}
@@ -163,6 +162,7 @@ const About = () => {
               onChange={(e) =>
                 setFormState({ ...formState, Title: e.target.value })
               }
+              className="form-control custom-input"
             />
           </Form.Group>
 
@@ -174,6 +174,7 @@ const About = () => {
               onChange={(e) =>
                 setFormState({ ...formState, Photo: e.target.files[0] })
               }
+              className="form-control custom-input"
             />
           </Form.Group>
 
@@ -186,6 +187,7 @@ const About = () => {
                   placeholder={`Enter section ${index + 1} title...`}
                   value={desc.Title}
                   onChange={(e) => handleChange(index, "Title", e.target.value)}
+                  className="form-control custom-input"
                 />
               </Form.Group>
 
@@ -199,6 +201,7 @@ const About = () => {
                   onChange={(e) =>
                     handleChange(index, "Explanation", e.target.value)
                   }
+                  className="form-control custom-input"
                 />
               </Form.Group>
             </div>
@@ -206,17 +209,22 @@ const About = () => {
         </Modal.Body>
 
         <Modal.Footer className="d-flex justify-content-end">
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button
+            className="button-orange me-2"
+            onClick={() => setShowModal(false)}
+          >
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            style={{ backgroundColor: "#0d3c6e", borderColor: "#0d3c6e" }}
-          >
+          <Button className="button-blue" onClick={handleSubmit}>
             Save Changes
           </Button>
         </Modal.Footer>
+        <style>{`
+          .custom-input:focus {
+            border-color: #FF7F00 !important;
+            box-shadow: 0 0 6px #FF7F00 !important;
+          }
+        `}</style>
       </Modal>
     </div>
   );

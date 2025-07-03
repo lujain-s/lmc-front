@@ -1,8 +1,20 @@
 /* styles/colors.css */
 :root {
-  --primary-color: #FF7F00;  /* برتقالي */
-  --secondary-color: #1E3A5F; /* أزرق غامق */
-  --white-color: #FFFFFF;  /* أبيض */
+  --primary-color: #ff7f00; /* برتقالي */
+  --secondary-color: #1e3a5f; /* أزرق غامق */
+  --white-color: #ffffff; /* أبيض */
   --text-color: #ffffff; /* أبيض */
-  --btn-hover: #E06B00; /* لون الزر عند التمرير */
+  --btn-hover: #e06b00; /* لون الزر عند التمرير */
+}
+
+.btn-room-save {
+  background-color: var(--secondary-color) !important;
+  color: var(--white-color) !important;
+  transition: background 0.2s;
+}
+
+.btn-room-save:hover,
+.btn-room-save:focus {
+  background-color: var(--primary-color) !important;
+  color: var(--white-color) !important;
 }

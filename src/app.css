@@ -1,4 +1,38 @@
+@import "./styles/colors.css"; /* استيراد ملف الألوان */
+
 .content-container {
   margin-left: 0; /* إزاحة المحتوى بجانب الشريط الجانبي */
   width: calc(100% - 250px); /* تأكد من أن المحتوى يأخذ بقية الشاشة */
+}
+.button-blue {
+  background: var(--secondary-color);
+  color: aliceblue;
+  border-radius: 4px;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+}
+.button-blue:hover {
+  background: transparent;
+  color: var(--secondary-color);
+  border: 1px solid var(--secondary-color);
+}
+.button-orange {
+  background: var(--primary-color);
+  color: aliceblue;
+  border-radius: 4px;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+}
+.button-orange:hover {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+
+.transparent-modal .modal-backdrop {
+  background: transparent !important;
+}
+
+.modal-backdrop.show {
+  background: transparent !important;
 }

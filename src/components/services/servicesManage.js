@@ -86,7 +86,8 @@ const customOption = (props) => {
 };
 
 export default function ServicesManage() {
-  const { request } = Operations();
+  const { request, user } = Operations();
+  const isAdmin = user?.role === "SuperAdmin" || false;
   const [showModal, setShowModal] = useState(false);
   const [allServices, setServices] = useState([]);
   const [formType, setFormType] = useState(null);
@@ -222,34 +223,38 @@ export default function ServicesManage() {
                         className="flag-icon"
                       />
                       <h5>{lang.title}</h5>
-                      <div className="d-flex gap-1">
-                        <button
-                          className="btn btn-outline-danger"
-                          onClick={() => {
-                            setOpenDelete(true);
-                            setDeletedId(lang.id);
-                          }}
-                        >
-                          <FaTrash />
-                        </button>
-                        <button
-                          className="btn btn-outline-warning"
-                          onClick={() => {
-                            setFormType(
-                              lang.description === "language"
-                                ? "language"
-                                : "service"
-                            );
-                            setSelectedService(lang);
-                            setTitle(lang.title);
-                            setDescription(lang.description);
-                            setPhoto(lang.photo);
-                            setShowModal(true);
-                          }}
-                        >
-                          <FaEdit />
-                        </button>
-                      </div>
+                      {isAdmin && (
+                        <div className="d-flex gap-1" style={{ marginTop: 8 }}>
+                          <button
+                            className="button-blue"
+                            style={{ padding: "6px 12px", fontSize: 18 }}
+                            onClick={() => {
+                              setOpenDelete(true);
+                              setDeletedId(lang.id);
+                            }}
+                          >
+                            <FaTrash />
+                          </button>
+                          <button
+                            className="button-orange"
+                            style={{ padding: "6px 12px", fontSize: 18 }}
+                            onClick={() => {
+                              setFormType(
+                                lang.description === "language"
+                                  ? "language"
+                                  : "service"
+                              );
+                              setSelectedService(lang);
+                              setTitle(lang.title);
+                              setDescription(lang.description);
+                              setPhoto(lang.photo);
+                              setShowModal(true);
+                            }}
+                          >
+                            <FaEdit />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </Col>
                 ))}
@@ -271,34 +276,38 @@ export default function ServicesManage() {
                       </span>
                       <span className="service-text">{service.title}</span>
                     </div>
-                    <div className="d-flex gap-1">
-                      <button
-                        className="btn btn-outline-danger"
-                        onClick={() => {
-                          setOpenDelete(true);
-                          setDeletedId(service.id);
-                        }}
-                      >
-                        <FaTrash />
-                      </button>
-                      <button
-                        className="btn btn-outline-warning"
-                        onClick={() => {
-                          setFormType(
-                            service.description === "language"
-                              ? "language"
-                              : "service"
-                          );
-                          setSelectedService(service);
-                          setTitle(service.title);
-                          setDescription(service.description);
-                          setPhoto(service.photo);
-                          setShowModal(true);
-                        }}
-                      >
-                        <FaEdit />
-                      </button>
-                    </div>
+                    {isAdmin && (
+                      <div className="d-flex gap-1" style={{ marginTop: 8 }}>
+                        <button
+                          className="button-blue"
+                          style={{ padding: "6px 12px", fontSize: 18 }}
+                          onClick={() => {
+                            setOpenDelete(true);
+                            setDeletedId(service.id);
+                          }}
+                        >
+                          <FaTrash />
+                        </button>
+                        <button
+                          className="button-orange"
+                          style={{ padding: "6px 12px", fontSize: 18 }}
+                          onClick={() => {
+                            setFormType(
+                              service.description === "language"
+                                ? "language"
+                                : "service"
+                            );
+                            setSelectedService(service);
+                            setTitle(service.title);
+                            setDescription(service.description);
+                            setPhoto(service.photo);
+                            setShowModal(true);
+                          }}
+                        >
+                          <FaEdit />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </Col>
               ))}
@@ -322,7 +331,8 @@ export default function ServicesManage() {
           </Modal.Header>
           <Modal.Body className="text-center">
             <button
-              className="btn btn-primary m-2"
+              className="button-blue m-2"
+              style={{ minWidth: 160 }}
               onClick={() => {
                 setFormType("language");
                 setDescription("language");
@@ -331,13 +341,64 @@ export default function ServicesManage() {
               Add Language
             </button>
             <button
-              className="btn btn-warning m-2"
+              className="button-orange m-2"
+              style={{ minWidth: 160 }}
               onClick={() => {
                 setFormType("service");
               }}
             >
               Add General Service
             </button>
+            <style>{`
+              .button-blue {
+                background-color: #1E3A5F;
+                border: none;
+                color: #fff;
+                font-weight: bold;
+                border-radius: 8px;
+                padding: 8px 18px;
+                transition: background 0.2s;
+              }
+              .button-blue:hover,
+              .button-blue:focus {
+                background-color: #FF7F00 !important;
+                color: #fff !important;
+              }
+              .button-orange {
+                background-color: #FF7F00;
+                border: none;
+                color: #fff;
+                font-weight: bold;
+                border-radius: 8px;
+                padding: 8px 18px;
+                transition: background 0.2s;
+              }
+              .button-orange:hover,
+              .button-orange:focus {
+                background-color: #1E3A5F !important;
+                color: #fff !important;
+              }
+              input:focus, select:focus, textarea:focus {
+                border-color: #FF7F00 !important;
+                box-shadow: 0 0 8px #FF7F00 !important;
+                outline: none !important;
+              }
+              .select__control--is-focused {
+                border-color: #FF7F00 !important;
+                box-shadow: 0 0 8px #FF7F00 !important;
+              }
+              .button-blue svg,
+              .button-orange svg {
+                color: #fff !important;
+                transition: color 0.2s;
+              }
+              .button-blue:hover svg,
+              .button-blue:focus svg,
+              .button-orange:hover svg,
+              .button-orange:focus svg {
+                color: var(--primary-color) !important;
+              }
+            `}</style>
           </Modal.Body>
         </Modal>
         <Modal

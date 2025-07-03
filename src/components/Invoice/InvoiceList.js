@@ -3,6 +3,13 @@ import Operations from "../back_component/Operations";
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import InvoiceDetails from "./invoiceDetails";
+import {
+  FaHashtag,
+  FaMoneyBill,
+  FaCheckCircle,
+  FaCalendarPlus,
+  FaCogs,
+} from "react-icons/fa";
 
 export default function InvoiceList() {
   const { request } = Operations();
@@ -39,18 +46,35 @@ export default function InvoiceList() {
 
   return (
     <div className="container py-4">
-      <h3 className="text-center mb-4" style={{ color: "#1E3A5F" }}>
-        Rooms List
-      </h3>
+      <h1
+        className="text-center text-uppercase mb-4"
+        style={{ letterSpacing: "5px", color: "#FF7F00", fontWeight: 700 }}
+      >
+        Invoice List
+      </h1>
 
       <table className="table table-bordered table-striped">
         <thead>
           <tr>
-            <th style={{ color: "#1E3A5F" }}>#</th>
-            <th style={{ color: "#1E3A5F" }}>Amount</th>
-            <th style={{ color: "#1E3A5F" }}>Status</th>
-            <th style={{ color: "#1E3A5F" }}>Created At</th>
-            <th style={{ color: "#1E3A5F" }}>Actions</th>
+            <th style={{ color: "#1E3A5F" }}>
+              <FaHashtag className="me-2" />#
+            </th>
+            <th style={{ color: "#1E3A5F" }}>
+              <FaMoneyBill className="me-2" />
+              Amount
+            </th>
+            <th style={{ color: "#1E3A5F" }}>
+              <FaCheckCircle className="me-2" />
+              Status
+            </th>
+            <th style={{ color: "#1E3A5F" }}>
+              <FaCalendarPlus className="me-2" />
+              Created At
+            </th>
+            <th style={{ color: "#1E3A5F" }}>
+              <FaCogs className="me-2" />
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -91,7 +115,7 @@ export default function InvoiceList() {
                 <td>{new Date(invoice.created_at).toLocaleString()}</td>
                 <td>
                   <button
-                    className="btn btn-sm btn-primary me-2"
+                    className="button-blue me-2"
                     onClick={() => handleView(invoice.id)}
                   >
                     View
@@ -108,10 +132,21 @@ export default function InvoiceList() {
         size="lg"
         centered
       >
-        <Modal.Body className="bg-darkblue ">
+        <Modal.Body
+          style={{ background: "transparent", boxShadow: "none", padding: 0 }}
+        >
           <InvoiceDetails invoiceId={actionId} />
         </Modal.Body>
       </Modal>
+      <style>{`
+        input.form-control:focus,
+        select.form-control:focus,
+        textarea.form-control:focus {
+          border-color: #FF7F00 !important;
+          box-shadow: 0 0 8px #FF7F00 !important;
+          outline: none;
+        }
+      `}</style>
     </div>
   );
 }

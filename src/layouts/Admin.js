@@ -34,48 +34,50 @@ import Announcements from "../components/announcements/announcementsList.js";
 
 function AutherizedAdmin() {
   return (
-    <div className="d-flex">
-      <Sidebar />
-      <div className="content-container flex-grow-1">
-        <Navbar />
-        <div className="container main text-center">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/add-employee" element={<AddEmployee />} />
-            <Route path="/edit-employee/:id" element={<EditEmployee />} />
-            <Route path="/employee-list" element={<EmployeeList />} />
-            <Route path="/statistics" element={<StatisticsPage />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/holidays" element={<HolidaysPage />} />
-            <Route path="/rooms" element={<RoomsList />} />
-            <Route path="/invoices" element={<InvoiceList />} />
-            <Route path="/services-manage" element={<ServicesManage />} />
-            <Route path="/language" element={<LanguageList />} />
-            <Route path="/add-holiday" element={<AddHoliday />} />
-            <Route path="/student-grade" element={<StudentGradesPage />} />
-            <Route path="/courses-date" element={<CourseSchedule />} />
-            <Route path="/add-course" element={<AddCourse />} />
-            <Route path="/announcements" element={<Announcements />} />
-            <Route path="/course-details/:id" element={<CourseDetails />} />
-            <Route path="/student-list" element={<StudentList />} />
-            <Route path="/student-details/:id" element={<StudentProfile />} />
-            <Route path="/complaint-list" element={<ComplaintList />} />
-            <Route
-              path="/complaint-details/:id"
-              element={<ComplaintDetails />}
-            />
-            <Route path="/Tasks" element={<TasksList />} />
-            <Route path="/assign-task" element={<AddTask />} />
-            holidays
-          </Routes>
+    <>
+      <div className="d-flex">
+        <Sidebar />
+        <div className="content-container flex-grow-1">
+          <Navbar />
+          <div className="container main text-center">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/add-employee" element={<AddEmployee />} />
+              <Route path="/edit-employee/:id" element={<EditEmployee />} />
+              <Route path="/employee-list" element={<EmployeeList />} />
+              <Route path="/statistics" element={<StatisticsPage />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/holidays" element={<HolidaysPage />} />
+              <Route path="/rooms" element={<RoomsList />} />
+              <Route path="/invoices" element={<InvoiceList />} />
+              <Route path="/services-manage" element={<ServicesManage />} />
+              <Route path="/language" element={<LanguageList />} />
+              <Route path="/add-holiday" element={<AddHoliday />} />
+              <Route path="/student-grade" element={<StudentGradesPage />} />
+              <Route path="/courses-date" element={<CourseSchedule />} />
+              <Route path="/add-course" element={<AddCourse />} />
+              <Route path="/announcements" element={<Announcements />} />
+              <Route path="/course-details/:id" element={<CourseDetails />} />
+              <Route path="/student-list" element={<StudentList />} />
+              <Route path="/student-details/:id" element={<StudentProfile />} />
+              <Route path="/complaint-list" element={<ComplaintList />} />
+              <Route
+                path="/complaint-details/:id"
+                element={<ComplaintDetails />}
+              />
+              <Route path="/Tasks" element={<TasksList />} />
+              <Route path="/assign-task" element={<AddTask />} />
+              holidays
+            </Routes>
+          </div>
+          <Footer />
         </div>
-        <Footer />
       </div>
-    </div>
+    </>
   );
 }
 

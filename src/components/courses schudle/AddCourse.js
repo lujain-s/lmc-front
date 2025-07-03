@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Operations from "../back_component/Operations";
 import { getWeekDayName } from "../back_component/utils";
+import "../../styles/colors.css";
 
 export default function AddCourse({ onSubmit, initData, isNew }) {
   const { request } = Operations();
@@ -91,11 +92,20 @@ export default function AddCourse({ onSubmit, initData, isNew }) {
     fetchLanguages();
   }, []);
 
+  const [preview, setPreview] = useState(
+    initData?.Photo ? initData.Photo : null
+  );
+
   const handleChange = (e) => {
     const { name, value, type, files, checked } = e.target;
 
     if (type === "file") {
       setCourse({ ...course, [name]: files[0] });
+      if (files && files[0]) {
+        setPreview(URL.createObjectURL(files[0]));
+      } else {
+        setPreview(null);
+      }
     } else if (name === "CourseDays") {
       let selectedDays = course.CourseDays ? course.CourseDays.split(",") : [];
 
@@ -244,10 +254,16 @@ export default function AddCourse({ onSubmit, initData, isNew }) {
           <form
             onSubmit={handleSubmit}
             className="card shadow rounded-4 border-0"
+            style={{ background: "#fff" }}
           >
             <div
               className="card-header text-center"
-              style={{ backgroundColor: "#1E3A5F", color: "#fff" }}
+              style={{
+                backgroundColor: "#1E3A5F",
+                color: "#fff",
+                borderTopLeftRadius: "1.5rem",
+                borderTopRightRadius: "1.5rem",
+              }}
             >
               <h3>{isNew ? "Add Course" : "Edit Course"}</h3>
             </div>
@@ -451,6 +467,21 @@ export default function AddCourse({ onSubmit, initData, isNew }) {
                   onChange={handleChange}
                   className="form-control"
                 />
+                {preview && (
+                  <div className="mt-3 text-center">
+                    <img
+                      src={preview}
+                      alt="Course Preview"
+                      style={{
+                        maxWidth: "180px",
+                        maxHeight: "180px",
+                        borderRadius: "12px",
+                        border: "3px solid var(--primary-color)",
+                        boxShadow: "0 2px 8px #eee",
+                      }}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Date range error */}
@@ -464,7 +495,8 @@ export default function AddCourse({ onSubmit, initData, isNew }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn btn-primary px-5"
+                  className="button-blue px-5"
+                  style={{ fontWeight: 600, fontSize: 18 }}
                 >
                   {loading ? "loading..." : isNew ? "Add Course" : "Save"}
                 </button>

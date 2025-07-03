@@ -149,26 +149,26 @@ export default function EmployeeList() {
             type="text"
             placeholder=" Search ..."
           />
-          <div className="flex gap-2">
+          <div className="flex my-4 gap-4">
             <button
-              className={`btn btn-outline-primary ${
-                fillter === "all" ? "bg-primary text-light" : ""
+              className={` button-blue  ${
+                fillter === "all" ? "button-orange" : ""
               }`}
               onClick={() => setFillter("all")}
             >
               All
             </button>
             <button
-              className={`btn mx-2 btn-outline-primary ${
-                fillter === "active" ? "bg-primary text-light" : ""
+              className={`button-blue mx-2 ${
+                fillter === "active" ? "button-orange" : ""
               }`}
               onClick={() => setFillter("active")}
             >
               Active
             </button>
             <button
-              className={`btn btn-outline-primary ${
-                fillter === "only_deleted" ? "bg-primary text-light" : ""
+              className={` button-blue ${
+                fillter === "only_deleted" ? "bg-orange" : ""
               }`}
               onClick={() => setFillter("only_deleted")}
             >
@@ -233,14 +233,14 @@ export default function EmployeeList() {
                                   setActionId(item.id);
                                   setShowRestoreModal(true);
                                 }}
-                                className="btn btn-warning btn-sm"
+                                className="button-blue"
                               >
                                 Restore
                               </button>
                             )}
                             <button
                               onClick={() => handleView(item.id)}
-                              className="btn btn-primary btn-sm"
+                              className="button-blue"
                             >
                               View
                             </button>
@@ -328,9 +328,13 @@ export default function EmployeeList() {
         <Modal
           show={showEmployeeModal}
           onHide={() => setShowEmployeeModal(false)}
-          size="xl"
+          size="l"
+          centered
+          dialogClassName="transparent-modal"
         >
-          <Modal.Body className="bg-darkblue">
+          <Modal.Body
+            style={{ background: "transparent", boxShadow: "none", padding: 0 }}
+          >
             <EmployeeDetails
               id={actionId}
               isDeleted={fillter === "only_deleted"}

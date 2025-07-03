@@ -2,10 +2,17 @@ import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import Operations from "../back_component/Operations";
 import { useQuery } from "@tanstack/react-query";
+import {
+  FaDoorOpen,
+  FaUsers,
+  FaCheckCircle,
+  FaCalendarPlus,
+} from "react-icons/fa";
 
 export default function RoomsList() {
   const { request } = Operations();
   const [fillter, setFillter] = useState("showRooms");
+  const [activeTab, setActiveTab] = useState("showRooms");
   const [showModal, setShowModal] = useState(false);
   const [isNew, setisNew] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
@@ -37,6 +44,13 @@ export default function RoomsList() {
     refetchOnReconnect: false,
     staleTime: 5 * 60 * 1000,
   });
+
+  const getDisplayedRooms = () => {
+    if (activeTab === "viewAvailableRooms") {
+      return rooms.filter((room) => room.Status === "Available");
+    }
+    return rooms;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -102,28 +116,34 @@ export default function RoomsList() {
       <h3 className="text-center mb-4" style={{ color: "#1E3A5F" }}>
         Rooms List
       </h3>
-      <div className="flex gap-2">
+      <div className="flex my-4 gap-2">
         <button
-          className={`btn btn-outline-primary ${
-            fillter === "showRooms" ? "bg-primary text-light" : ""
+          className={`button-blue  ${
+            activeTab === "showRooms" ? "button-orange" : ""
           }`}
-          onClick={() => setFillter("showRooms")}
+          onClick={() => {
+            setFillter("showRooms");
+            setActiveTab("showRooms");
+          }}
         >
           All
         </button>
         <button
-          className={`btn mx-2 btn-outline-primary ${
-            fillter === "viewAvailableRooms" ? "bg-primary text-light" : ""
+          className={` mx-2 button-blue ${
+            activeTab === "viewAvailableRooms" ? "button-orange" : ""
           }`}
-          onClick={() => setFillter("viewAvailableRooms")}
+          onClick={() => setActiveTab("viewAvailableRooms")}
         >
           Available
         </button>
         <button
-          className={`btn btn-outline-primary ${
-            fillter === "viewReservedRooms" ? "bg-primary text-light" : ""
+          className={`button-blue ${
+            activeTab === "viewReservedRooms" ? "button-orange" : ""
           }`}
-          onClick={() => setFillter("viewReservedRooms")}
+          onClick={() => {
+            setFillter("viewReservedRooms");
+            setActiveTab("viewReservedRooms");
+          }}
         >
           Reserved
         </button>
@@ -132,10 +152,22 @@ export default function RoomsList() {
         <thead>
           <tr>
             <th style={{ color: "#1E3A5F" }}>#</th>
-            <th style={{ color: "#1E3A5F" }}>Room Number</th>
-            <th style={{ color: "#1E3A5F" }}>Capacity</th>
-            <th style={{ color: "#1E3A5F" }}>Status</th>
-            <th style={{ color: "#1E3A5F" }}>Created At</th>
+            <th style={{ color: "#1E3A5F" }}>
+              <FaDoorOpen className="me-2" />
+              Room Number
+            </th>
+            <th style={{ color: "#1E3A5F" }}>
+              <FaUsers className="me-2" />
+              Capacity
+            </th>
+            <th style={{ color: "#1E3A5F" }}>
+              <FaCheckCircle className="me-2" />
+              Status
+            </th>
+            <th style={{ color: "#1E3A5F" }}>
+              <FaCalendarPlus className="me-2" />
+              Created At
+            </th>
             {isAdmin && <th style={{ color: "#1E3A5F" }}>Actions</th>}{" "}
           </tr>
         </thead>
@@ -159,7 +191,7 @@ export default function RoomsList() {
               </td>
             </tr>
           ) : (
-            rooms.map((room, index) => (
+            getDisplayedRooms().map((room, index) => (
               <tr key={room.id}>
                 <td>{index + 1}</td>
                 <td>{room.NumberOfRoom}</td>
@@ -179,7 +211,7 @@ export default function RoomsList() {
                 {isAdmin && (
                   <td>
                     <button
-                      className="btn btn-sm btn-primary me-2"
+                      className="button-blue me-2"
                       onClick={() => {
                         setShowModal(true);
                         setNumberOfRoom(room.NumberOfRoom);
@@ -211,6 +243,7 @@ export default function RoomsList() {
               <input
                 type="text"
                 className="form-control"
+                style={{ border: "2px solid var(--primary-color" }}
                 value={numberOfRoom}
                 onChange={(e) => setNumberOfRoom(e.target.value)}
                 required
@@ -221,17 +254,14 @@ export default function RoomsList() {
               <input
                 type="number"
                 className="form-control"
+                style={{ border: "2px solid var(--primary-color" }}
                 value={capacity}
                 onChange={(e) => setCapacity(e.target.value)}
                 required
               />
             </div>
             <div className="text-end">
-              <button
-                type="submit"
-                className="btn"
-                style={{ backgroundColor: "#1E3A5F", color: "#fff" }}
-              >
+              <button type="submit" className="btn btn-room-save">
                 Save Room
               </button>
             </div>
