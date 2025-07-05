@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Operations from "../back_component/Operations";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -13,6 +13,7 @@ import {
 
 export default function ComplaintList() {
   const { request } = Operations();
+  const navigate = useNavigate();
   const [fillter, setFillter] = useState("showAllComplaint");
 
   const fetchData = async () => {
@@ -34,6 +35,18 @@ export default function ComplaintList() {
     refetchOnReconnect: false,
     staleTime: 5 * 60 * 1000,
   });
+
+  // دالة لتحديث القائمة بعد تغيير الشكوى
+  const handleComplaintUpdate = () => {
+    refetch();
+  };
+
+  // دالة للانتقال إلى تفاصيل الشكوى مع تمرير دالة التحديث
+  const handleViewComplaint = (complaintId) => {
+    navigate(`/complaint-details/${complaintId}`, {
+      state: { onComplaintUpdate: handleComplaintUpdate },
+    });
+  };
 
   useEffect(() => {
     const handleSearch = () => {
@@ -150,17 +163,19 @@ export default function ComplaintList() {
                   <td>{new Date(item.created_at).toLocaleString()}</td>
                   <td>{renderStatusBadge(item.status)}</td>
                   <td>
-                    <Link
-                      to={`/complaint-details/${item.id}`}
+                    <button
                       className="button-blue"
                       style={{
                         padding: "4px 14px",
                         borderRadius: "4px",
                         fontWeight: 600,
+                        textDecoration: "none",
+                        border: "none",
                       }}
+                      onClick={() => handleViewComplaint(item.id)}
                     >
                       View
-                    </Link>
+                    </button>
                   </td>
                 </tr>
               ))}

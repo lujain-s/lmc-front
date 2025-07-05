@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Operations from "../back_component/Operations";
 import "../../styles/colors.css";
 
-const AddTask = ({ onSubmit }) => {
+const AddTask = ({ onSubmit, editMode = false, taskData = null }) => {
   const { request } = Operations();
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
@@ -19,22 +19,54 @@ const AddTask = ({ onSubmit }) => {
     assigned_user_id: "",
   });
   const [users, setUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
 
-  const fetchUsers = async () => {
+  // Initialize form with task data if in edit mode
+  useEffect(() => {
+    if (editMode && taskData) {
+      setForm({
+        Description: taskData.Description || "",
+        Deadline: taskData.Deadline ? taskData.Deadline.split("T")[0] : "",
+        RequiresInvoice: taskData.RequiresInvoice || false,
+        role_id: taskData.role_id?.toString() || "",
+        assigned_user_id: taskData.user_id?.toString() || "",
+      });
+    }
+  }, [editMode, taskData]);
+
+  // Fetch all users
+  const fetchAllUsers = async () => {
+    try {
+      const res = await request.get("super-admin/getStaff");
+      setAllUsers(res.data.users || []);
+    } catch (err) {
+      console.error("Error fetching all users:", err);
+      setAllUsers([]);
+    }
+  };
+
+  // Fetch users by role (for role_id selection)
+  const fetchUsersByRole = async () => {
     try {
       const res = await request.get(
         `super-admin/getUsersByRoleId/${form.role_id}`
       );
       setUsers(res.data.users || []);
     } catch (err) {
-      console.error("Error fetching users:", err);
+      console.error("Error fetching users by role:", err);
       setUsers([]);
     }
   };
 
   useEffect(() => {
+    fetchAllUsers();
+  }, []);
+
+  useEffect(() => {
     if (form.role_id) {
-      fetchUsers();
+      fetchUsersByRole();
+    } else {
+      setUsers([]);
     }
   }, [form.role_id]);
 
@@ -62,18 +94,29 @@ const AddTask = ({ onSubmit }) => {
     };
 
     try {
-      const res = await request.post("super-admin/assignTask", data);
-      setSuccess("The task has been added successfully!");
-      setForm({
-        Description: "",
-        Deadline: "",
-        RequiresInvoice: false,
-        role_id: "",
-        assigned_user_id: "",
-      });
+      let res;
+      if (editMode && taskData) {
+        // Update existing task
+        res = await request.post(`super-admin/updateTask/${taskData.id}`, data);
+        setSuccess("The task has been updated successfully!");
+      } else {
+        // Create new task
+        res = await request.post("super-admin/assignTask", data);
+        setSuccess("The task has been added successfully!");
+      }
+
+      if (!editMode) {
+        setForm({
+          Description: "",
+          Deadline: "",
+          RequiresInvoice: false,
+          role_id: "",
+          assigned_user_id: "",
+        });
+      }
       onSubmit();
     } catch (err) {
-      console.error("Error in addTask:", err.response || err.message);
+      console.error("Error in task operation:", err.response || err.message);
       if (err.response) {
         if (err.response.status === 422) {
           setErrors(err.response.data.errors || {});
@@ -147,10 +190,12 @@ const AddTask = ({ onSubmit }) => {
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="roleId">
-        <Form.Label>Role ID</Form.Label>
+        <Form.Label>Role ID (Assign to all users in this role)</Form.Label>
         <select
           value={form.role_id}
-          onChange={(e) => setForm({ ...form, role_id: e.target.value })}
+          onChange={(e) =>
+            setForm({ ...form, role_id: e.target.value, assigned_user_id: "" })
+          }
           className={`form-control rounded ${
             errors.role_id ? "is-invalid" : ""
           }`}
@@ -166,7 +211,7 @@ const AddTask = ({ onSubmit }) => {
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="assignedUserId">
-        <Form.Label>Assign to User</Form.Label>
+        <Form.Label>Assign to Specific User (Optional)</Form.Label>
         <select
           name="assigned_user_id"
           value={form.assigned_user_id}
@@ -175,16 +220,21 @@ const AddTask = ({ onSubmit }) => {
             errors.user_id ? "is-invalid" : ""
           }`}
         >
-          <option value="">Select a user...</option>
-          {users.map((user) => (
+          <option value="">Select a specific user...</option>
+          {allUsers.map((user) => (
             <option key={user.id} value={user.id}>
-              {user.name}
+              {user.name} ({user.role})
             </option>
           ))}
         </select>
         <Form.Control.Feedback type="invalid">
           {errors.user_id}
         </Form.Control.Feedback>
+        <small className="text-muted">
+          Note: If you select a role above, the task will be assigned to all
+          users in that role. If you select a specific user, it will override
+          the role selection.
+        </small>
       </Form.Group>
 
       <div className="d-flex justify-content-end">
@@ -196,8 +246,11 @@ const AddTask = ({ onSubmit }) => {
         >
           {loading ? (
             <>
-              <Spinner animation="border" size="sm" /> Saving...
+              <Spinner animation="border" size="sm" />{" "}
+              {editMode ? "Updating..." : "Saving..."}
             </>
+          ) : editMode ? (
+            "Update Task"
           ) : (
             "Add Task"
           )}

@@ -7,6 +7,7 @@ export default function Confirm({
   onSuccess,
   onClose,
   loading,
+  buttonText = "Delete",
 }) {
   return (
     <Modal show={show} onHide={onClose} centered>
@@ -45,7 +46,7 @@ export default function Confirm({
               padding: "8px 20px",
             }}
           >
-            {loading ? <Spinner animation="border" size="sm" /> : "Delete"}
+            {loading ? <Spinner animation="border" size="sm" /> : buttonText}
           </Button>
         </div>
       </Modal.Body>

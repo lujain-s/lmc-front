@@ -14,10 +14,12 @@ const HolidaysPage = () => {
     try {
       const response = await request.get("getHoliday");
       if (response.data.status === "success") {
+        console.log("Fetched holidays:", response.data.data);
         return response.data.data;
       }
     } catch (error) {
       console.error("Error fetching holidays:", error);
+      return [];
     }
   };
   //data from react quiry after fetch
@@ -33,7 +35,7 @@ const HolidaysPage = () => {
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     refetchOnReconnect: false,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0, // إزالة التخزين المؤقت لضمان جلب البيانات المحدثة
   });
 
   return (
@@ -50,25 +52,53 @@ const HolidaysPage = () => {
         LMC HOLIDAYS
       </h1>
 
-      <div className="row w-100">
-        {holidays.map(({ id, Name, StartDate, EndDate, Description }) => (
-          <div key={id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div className="card shadow-sm text-center p-3 h-100">
-              <GiPartyPopper
-                style={{ color: "#FF7F00", fontSize: "50px" }}
-                className="display-5 "
-              />
-              <h5 className="fw-bold">{Name}</h5>
-              <p className="text-muted mb-1">
-                {StartDate} ➜ {EndDate}
-              </p>
-              {Description && (
-                <small className="text-secondary">{Description}</small>
-              )}
-            </div>
+      {isLoading ? (
+        <div className="text-center mt-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
           </div>
-        ))}
-      </div>
+          <p className="mt-2">Loading holidays...</p>
+        </div>
+      ) : isError ? (
+        <div className="text-center mt-5">
+          <p className="text-danger">
+            Error loading holidays. Please try again.
+          </p>
+          <button
+            className="btn btn-primary"
+            onClick={() => refetch()}
+            style={{ backgroundColor: "#1E3A5F", borderColor: "#1E3A5F" }}
+          >
+            Retry
+          </button>
+        </div>
+      ) : (
+        <div className="row w-100">
+          {holidays.length === 0 ? (
+            <div className="col-12 text-center">
+              <p className="text-muted">No holidays found.</p>
+            </div>
+          ) : (
+            holidays.map(({ id, Name, StartDate, EndDate, Description }) => (
+              <div key={id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div className="card shadow-sm text-center p-3 h-100">
+                  <GiPartyPopper
+                    style={{ color: "#FF7F00", fontSize: "50px" }}
+                    className="display-5 "
+                  />
+                  <h5 className="fw-bold">{Name}</h5>
+                  <p className="text-muted mb-1">
+                    {StartDate} ➜ {EndDate}
+                  </p>
+                  {Description && (
+                    <small className="text-secondary">{Description}</small>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
 
       {/* زر الإضافة */}
       <button
@@ -94,7 +124,13 @@ const HolidaysPage = () => {
       </button>
 
       {/* مودال إضافة عطلة */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
         <Modal.Header
           closeButton
           style={{ backgroundColor: "#1E3A5F", color: "white" }}
@@ -103,8 +139,9 @@ const HolidaysPage = () => {
         </Modal.Header>
         <Modal.Body>
           <AddHolidayPage
-            onSuccess={() => refetch}
+            onSuccess={() => setShowModal(false)}
             onClose={() => setShowModal(false)}
+            refetch={refetch}
           />
         </Modal.Body>
       </Modal>

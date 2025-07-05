@@ -77,6 +77,7 @@ export default function EmployeeList() {
       await request.delete(`super-admin/destroyEmployee/${id}`);
       toast.success("Employee deleted successfuly!");
       setShowDeleteModal(false);
+      refetch();
     } catch (err) {
       console.error(err);
     } finally {
@@ -89,8 +90,10 @@ export default function EmployeeList() {
       await request.post(`super-admin/restoreEmployee/${id}`);
       toast.success("Employee restored successfuly!");
       setShowRestoreModal(false);
+      refetch(); // إعادة جلب البيانات لتحديث القائمة
     } catch (err) {
       console.error(err);
+      toast.error("Failed to restore employee!");
     } finally {
       setLoading(false);
     }
@@ -309,20 +312,15 @@ export default function EmployeeList() {
         />
       )}
       {showRestoreModal && (
-        <Modal
+        <Confirm
           show={showRestoreModal}
-          onHide={() => setShowRestoreModal(false)}
-          size="sm"
-        >
-          <Modal.Body className="bg-darkblue">
-            <Confirm
-              loading={loading}
-              message={"Are you sure you want to Restore this employee?"}
-              onSuccess={() => handleRestore(actionId)}
-              onClose={() => setShowRestoreModal(false)}
-            />
-          </Modal.Body>
-        </Modal>
+          loading={loading}
+          title="Confirm Restoration"
+          message="Are you sure you want to restore this employee?"
+          onSuccess={() => handleRestore(actionId)}
+          onClose={() => setShowRestoreModal(false)}
+          buttonText="Restore"
+        />
       )}
       {showEmployeeModal && (
         <Modal

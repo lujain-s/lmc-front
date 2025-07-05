@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import Operations from "../back_component/Operations";
 
-export default function AddStudent({ onSubmit, onClose, id }) {
+export default function AddStudent({
+  onSubmit,
+  onClose,
+  id,
+  showAllStudents = false,
+}) {
   const [students, setStudents] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [studentType, setStudentsType] = useState("");
   const [student, setStudent] = useState({
     StudentId: "",
@@ -39,9 +45,21 @@ export default function AddStudent({ onSubmit, onClose, id }) {
     }
   };
 
+  const fetchCourses = async () => {
+    try {
+      const res = await request.get("viewCourses");
+      setCourses(res.data.Courses || []);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+    }
+  };
+
   useEffect(() => {
     fetchStudents();
-  }, [studentType]);
+    if (showAllStudents) {
+      fetchCourses();
+    }
+  }, [studentType, showAllStudents]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -71,20 +89,42 @@ export default function AddStudent({ onSubmit, onClose, id }) {
 
   return (
     <Form style={{ color: "#1E3A5F" }} onSubmit={handleSubmit} noValidate>
+      {/* سيليكت الكورس - يظهر فقط عند عرض جميع الطلاب */}
+      {showAllStudents && (
+        <div className="mb-3 text-start">
+          <label className="form-label">Select Course</label>
+          <select
+            name="CourseId"
+            className="form-control"
+            value={student.CourseId}
+            onChange={handleChange}
+            required
+          >
+            <option value="">-- Select a Course --</option>
+            {courses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.Description}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       <div className="mb-3 text-start">
-        <label className="form-label">user type</label>
+        <label className="form-label">User Type</label>
         <select
           name="StudentId"
           className="form-control"
           value={studentType}
           onChange={(e) => setStudentsType(e.target.value)}
         >
-          <option value="">-- user type --</option>
+          <option value="">-- User Type --</option>
           <option value={""}>All</option>
           <option value={"student"}>Student</option>
           <option value={"guest"}>Guest</option>
         </select>
       </div>
+
       <div className="mb-3 text-start">
         <label className="form-label">Select Student</label>
         <select

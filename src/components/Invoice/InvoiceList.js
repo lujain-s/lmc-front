@@ -3,6 +3,7 @@ import Operations from "../back_component/Operations";
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import InvoiceDetails from "./invoiceDetails";
+import AddInvoice from "./AddInvoice";
 import {
   FaHashtag,
   FaMoneyBill,
@@ -14,21 +15,30 @@ import {
 export default function InvoiceList() {
   const { request } = Operations();
   const [openModal, setOpenModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [actionId, setActionId] = useState("");
+
   const fetchInvoices = async () => {
     try {
       const response = await request.get("secretarya/showAllInvoices");
       console.log(response);
       return response.data.data || [];
     } catch (error) {
-      console.error("Error fetching rooms:", error);
+      console.error("Error fetching invoices:", error);
       return [];
     }
   };
+
   const handleView = (id) => {
     setOpenModal(true);
     setActionId(id);
   };
+
+  const handleAddInvoice = () => {
+    setShowAddModal(false);
+    refetch();
+  };
+
   const {
     data: invoices = [],
     isLoading,
@@ -46,6 +56,27 @@ export default function InvoiceList() {
 
   return (
     <div className="container py-4">
+      <button
+        className="btn rounded-circle"
+        style={{
+          position: "fixed",
+          bottom: "60px",
+          right: "30px",
+          width: "60px",
+          height: "60px",
+          fontSize: "24px",
+          backgroundColor: "#1E3A5F",
+          borderColor: "#1E3A5F",
+          color: "#fff",
+          boxShadow: "0 4px 8px #1E3A5F",
+          zIndex: 1000,
+          border: "none",
+        }}
+        onClick={() => setShowAddModal(true)}
+      >
+        +
+      </button>
+
       <h1
         className="text-center text-uppercase mb-4"
         style={{ letterSpacing: "5px", color: "#FF7F00", fontWeight: 700 }}
@@ -87,13 +118,13 @@ export default function InvoiceList() {
           ) : isError ? (
             <tr>
               <td colSpan="6" className="text-center text-danger">
-                Error: {error?.message || "Failed to load rooms"}
+                Error: {error?.message || "Failed to load invoices"}
               </td>
             </tr>
           ) : invoices.length === 0 ? (
             <tr>
               <td colSpan="6" className="text-center">
-                No rooms found.
+                No invoices found.
               </td>
             </tr>
           ) : (
@@ -104,7 +135,7 @@ export default function InvoiceList() {
                 <td>
                   <span
                     className={`badge ${
-                      invoice.status === "Available"
+                      invoice.status === "approved"
                         ? "bg-success"
                         : "bg-secondary"
                     }`}
@@ -126,9 +157,10 @@ export default function InvoiceList() {
           )}
         </tbody>
       </table>
+
       <Modal
         show={openModal}
-        onHide={() => setOpenModal("")}
+        onHide={() => setOpenModal(false)}
         size="lg"
         centered
       >
@@ -138,6 +170,24 @@ export default function InvoiceList() {
           <InvoiceDetails invoiceId={actionId} />
         </Modal.Body>
       </Modal>
+
+      <Modal
+        show={showAddModal}
+        onHide={() => setShowAddModal(false)}
+        size="lg"
+        centered
+      >
+        <Modal.Header
+          closeButton
+          style={{ backgroundColor: "#1E3A5F", color: "white" }}
+        >
+          <Modal.Title>Create New Invoice</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <AddInvoice onSubmit={handleAddInvoice} />
+        </Modal.Body>
+      </Modal>
+
       <style>{`
         input.form-control:focus,
         select.form-control:focus,
@@ -145,6 +195,18 @@ export default function InvoiceList() {
           border-color: #FF7F00 !important;
           box-shadow: 0 0 8px #FF7F00 !important;
           outline: none;
+        }
+        
+        .button-blue {
+          background-color: #1E3A5F;
+          border-color: #1E3A5F;
+          color: white;
+        }
+        
+        .button-blue:hover {
+          background-color: #FF7F00;
+          border-color: #FF7F00;
+          color: white;
         }
       `}</style>
     </div>

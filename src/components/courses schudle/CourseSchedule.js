@@ -134,9 +134,10 @@ export default function CourseSchedule() {
               to={`/course-details/${course.id}`}
               className="button-blue me-1"
               style={{
-                padding: "4px 14px",
-                borderRadius: "4px",
-                fontWeight: 600,
+                padding: "4px 12px",
+                fontSize: 18,
+                display: "inline-block",
+                textDecoration: "none",
               }}
             >
               <FaEye />
@@ -292,7 +293,7 @@ export default function CourseSchedule() {
           .button-blue:focus svg,
           .button-orange:hover svg,
           .button-orange:focus svg {
-            color: var(--primary-color) !important;
+            color: #fff !important;
           }
           input.form-control:focus,
            select.form-control:focus,

@@ -6,7 +6,7 @@ import Operations from "../back_component/Operations";
 import Confirm from "../ui/confirmMessage";
 import { FaHashtag, FaUser, FaEnvelope, FaCogs } from "react-icons/fa";
 
-export default function StudentList({ id, start }) {
+export default function StudentList({ id, start, showAllStudents = false }) {
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -16,10 +16,18 @@ export default function StudentList({ id, start }) {
 
   const fetchStudents = async () => {
     try {
-      const res = await request.get(
-        `secretarya/viewEnrolledStudentsInCourse/${id}`
-      );
-      return res.data;
+      let res;
+      if (showAllStudents) {
+        // جلب جميع الطلاب المسجلين
+        res = await request.get("secretarya/getAllEnrolledStudents");
+        return res.data;
+      } else {
+        // جلب الطلاب في كورس معين
+        res = await request.get(
+          `secretarya/viewEnrolledStudentsInCourse/${id}`
+        );
+        return res.data;
+      }
     } catch (err) {
       console.error("Fetch error:", err);
     }
@@ -41,6 +49,7 @@ export default function StudentList({ id, start }) {
       setLoading(false);
     }
   };
+
   const {
     data: students = [],
     isLoading,
@@ -48,8 +57,8 @@ export default function StudentList({ id, start }) {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["students", id],
-    enabled: !!id,
+    queryKey: showAllStudents ? ["allStudents"] : ["students", id],
+    enabled: showAllStudents ? true : !!id,
     queryFn: fetchStudents,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
@@ -61,9 +70,33 @@ export default function StudentList({ id, start }) {
     refetch();
   };
 
-  const filteredStudents = students.filter((s) =>
-    s.Student.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredStudents = students.filter((s) => {
+    const studentName = showAllStudents
+      ? s.Student?.name || s.name || ""
+      : s.Student?.name || "";
+    return studentName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  const getStudentName = (student) => {
+    if (showAllStudents) {
+      return student.Student?.name || student.name || "Unknown";
+    }
+    return student.Student?.name || "Unknown";
+  };
+
+  const getStudentEmail = (student) => {
+    if (showAllStudents) {
+      return student.Student?.email || student.email || "Unknown";
+    }
+    return student.Student?.email || "Unknown";
+  };
+
+  const getStudentId = (student) => {
+    if (showAllStudents) {
+      return student.Student?.id || student.id || student.EnrollmentId;
+    }
+    return student.Student?.id || student.EnrollmentId;
+  };
 
   return (
     <div className="pt-5 pb-5 mt-5 container">
@@ -71,7 +104,7 @@ export default function StudentList({ id, start }) {
         className="text-center text-uppercase mb-4"
         style={{ letterSpacing: "5px", color: "#FF7F00", fontWeight: 700 }}
       >
-        Student Information
+        {showAllStudents ? "All Enrolled Students" : "Student Information"}
       </h1>
 
       <p className="text-center">
@@ -95,7 +128,7 @@ export default function StudentList({ id, start }) {
           <div className="d-flex justify-content-between align-items-center  px-4 py-2">
             <h3 className="m-0" style={{ color: "#1E3A5F" }}>
               <FaUser className="me-2" />
-              Student List
+              {showAllStudents ? "All Students List" : "Student List"}
             </h3>
             <button className="button-blue" onClick={() => setShowModal(true)}>
               + <FaUser />
@@ -117,19 +150,21 @@ export default function StudentList({ id, start }) {
                 <FaEnvelope className="me-2" />
                 Email
               </th>
-              <th style={{ color: "#1E3A5F" }}>
-                <FaCogs className="me-2" />
-                Actions
-              </th>
+              {!showAllStudents && (
+                <th style={{ color: "#1E3A5F" }}>
+                  <FaCogs className="me-2" />
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
             {filteredStudents.map((student, index) => (
-              <tr key={student.EnrollmentId}>
+              <tr key={getStudentId(student)}>
                 <td>{index + 1}</td>
                 <td>
                   <h6 style={{ marginBottom: "5px" }}>
-                    {student.Student.name}
+                    {getStudentName(student)}
                   </h6>
                 </td>
                 <td>
@@ -140,21 +175,23 @@ export default function StudentList({ id, start }) {
                       color: "#007bff",
                     }}
                   >
-                    {student.Student.email}
+                    {getStudentEmail(student)}
                   </p>
                 </td>
-                <td>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => {
-                      setConfirmOpen(true);
-                      setActionId(student.Student.id);
-                    }}
-                    disabled={isStarted || loading}
-                  >
-                    Cancel
-                  </button>
-                </td>
+                {!showAllStudents && (
+                  <td>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => {
+                        setConfirmOpen(true);
+                        setActionId(getStudentId(student));
+                      }}
+                      disabled={isStarted || loading}
+                    >
+                      Cancel
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
             {isLoading && <tr>Loading...</tr>}
@@ -182,17 +219,23 @@ export default function StudentList({ id, start }) {
             onSubmit={handleAddStudent}
             onClose={() => setShowModal(false)}
             id={id}
+            showAllStudents={showAllStudents}
           />
         </Modal.Body>
       </Modal>
-      <Confirm
-        show={confirmOpen}
-        title="Confirm Unenrollment"
-        message="Are you sure you want to cancel Enrollment this student?"
-        onSuccess={() => handleUnrollment()}
-        onClose={() => setConfirmOpen(false)}
-        loading={loading}
-      />
+
+      {/* مودال تأكيد إلغاء التسجيل - يظهر فقط عند عرض طلاب كورس معين */}
+      {!showAllStudents && (
+        <Confirm
+          show={confirmOpen}
+          title="Confirm Unenrollment"
+          message="Are you sure you want to cancel Enrollment this student?"
+          onSuccess={() => handleUnrollment()}
+          onClose={() => setConfirmOpen(false)}
+          loading={loading}
+        />
+      )}
+
       <style>
         {`
           .button-blue {

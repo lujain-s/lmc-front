@@ -73,6 +73,12 @@ const Sidebar = () => {
         { to: "/statistics", icon: <FaChartLine />, label: "Analytics" },
         { to: "/student-grade", icon: <FaChartBar />, label: "Student grade" },
         { to: "/courses-date", icon: <FaClock />, label: "Courses date" },
+        {
+          to: "/IndividualCourseRequests",
+          icon: "clock",
+          label: "CourseRequests",
+        },
+
         { to: "/about", icon: <FaExclamationCircle />, label: "Website info" },
         { to: "/invoices", icon: <FaFileInvoiceDollar />, label: "Invoices" },
         { to: "/student-list", icon: <FaUsers />, label: "Student List" },
@@ -100,6 +106,12 @@ const Sidebar = () => {
       { to: "/statistics", icon: "chart-line", label: "Analytics" },
       { to: "/student-grade", icon: "graduation-cap", label: "Student grade" },
       { to: "/courses-date", icon: "clock", label: "Courses date" },
+      {
+        to: "/IndividualCourseRequests",
+        icon: "clock",
+        label: "CourseRequests",
+      },
+
       { to: "/about", icon: "info-circle", label: "Website info" },
       { to: "/invoices", icon: "file", label: "Invoices" },
       { to: "/student-list", icon: "users", label: "Student List" },
@@ -116,6 +128,12 @@ const Sidebar = () => {
       { to: "/contact", icon: "phone", label: "Contact" },
       { to: "/rooms", icon: "school", label: "Clases" },
       { to: "/courses-date", icon: "clock", label: "Courses date" },
+      {
+        to: "/IndividualCourseRequests",
+        icon: "clock",
+        label: "CourseRequests",
+      },
+
       { to: "/profile", icon: "user", label: "Profile page" },
       { to: "/student-list", icon: "users", label: "Student List" },
       { to: "/announcements", icon: "bullhorn", label: "Announcements" },

@@ -8,19 +8,22 @@ export default function CourseDetails() {
   const { request } = Operations();
   const { id } = useParams();
   const [course, setCourse] = useState(null);
-  const [lessons, setLessons] = useState(null);
+  const [lessons, setLessons] = useState([]);
 
   const fetchLessons = async () => {
     try {
       const res = await request.get(`getCourseLessons/${id}`);
-      setLessons(res.data.Lessons);
+      setLessons(res.data.Lessons || []);
     } catch (error) {
       console.log(error);
+      setLessons([]);
     }
   };
   useEffect(() => {
-    fetchLessons();
-  }, []);
+    if (id) {
+      fetchLessons();
+    }
+  }, [id]);
   const fetchCourseData = async () => {
     try {
       const res = await request.get(`viewCourse/${id}`);
@@ -112,7 +115,7 @@ export default function CourseDetails() {
               <h4>Lessons</h4>
             </div>
             <div className="card-body">
-              {lessons.length > 0 ? (
+              {lessons && lessons.length > 0 ? (
                 <ul className="list-group">
                   {lessons.map((lesson) => (
                     <li key={lesson.lessonId} className="list-group-item">

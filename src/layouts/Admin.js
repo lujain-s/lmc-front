@@ -31,6 +31,7 @@ import RoomsList from "../components/rooms/roomsList.js";
 import InvoiceList from "../components/Invoice/InvoiceList.js";
 import ServicesManage from "../components/services/servicesManage.js";
 import Announcements from "../components/announcements/announcementsList.js";
+import IndividualCourseRequests from "../components/courses schudle/IndividualCourseRequests.js";
 
 function AutherizedAdmin() {
   return (
@@ -62,7 +63,10 @@ function AutherizedAdmin() {
               <Route path="/add-course" element={<AddCourse />} />
               <Route path="/announcements" element={<Announcements />} />
               <Route path="/course-details/:id" element={<CourseDetails />} />
-              <Route path="/student-list" element={<StudentList />} />
+              <Route
+                path="/student-list"
+                element={<StudentList showAllStudents={true} />}
+              />
               <Route path="/student-details/:id" element={<StudentProfile />} />
               <Route path="/complaint-list" element={<ComplaintList />} />
               <Route
@@ -71,6 +75,10 @@ function AutherizedAdmin() {
               />
               <Route path="/Tasks" element={<TasksList />} />
               <Route path="/assign-task" element={<AddTask />} />
+              <Route
+                path="/IndividualCourseRequests"
+                element={<IndividualCourseRequests />}
+              />
               holidays
             </Routes>
           </div>

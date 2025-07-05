@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
 import Operations from "../back_component/Operations";
 
-export default function AddHolidayPage({ onClose, onSuccess }) {
+export default function AddHolidayPage({ onClose, onSuccess, refetch }) {
   const [formData, setFormData] = useState({
     name: "",
     startDate: "",
@@ -47,6 +47,12 @@ export default function AddHolidayPage({ onClose, onSuccess }) {
         endDate: "",
         description: "",
       });
+
+      // إعادة جلب البيانات من المكون الأب
+      if (refetch) {
+        await refetch();
+      }
+
       if (onClose) onClose();
       if (onSuccess) onSuccess();
     } catch (err) {
