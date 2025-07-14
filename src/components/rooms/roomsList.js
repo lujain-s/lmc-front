@@ -132,7 +132,10 @@ export default function RoomsList() {
           className={` mx-2 button-blue ${
             activeTab === "viewAvailableRooms" ? "button-orange" : ""
           }`}
-          onClick={() => setActiveTab("viewAvailableRooms")}
+          onClick={() => {
+            setFillter("showRooms"); // جلب كل القاعات
+            setActiveTab("viewAvailableRooms"); // تصفية المتاحة فقط
+          }}
         >
           Available
         </button>

@@ -13,7 +13,6 @@ import Login from "../components/login/Login.js";
 import About from "../components/services/About.js";
 import HolidaysPage from "../components/free days/HolidaysPage.js";
 import AddHoliday from "../components/free days/AddHolidayPage.js";
-import StudentGradesPage from "../components/student/StudentGrades.js";
 import CourseSchedule from "../components/courses schudle/CourseSchedule.js";
 import EditEmployee from "../components/teachers/EditEmployee.js";
 import AddCourse from "../components/courses schudle/AddCourse.js";
@@ -32,6 +31,12 @@ import InvoiceList from "../components/Invoice/InvoiceList.js";
 import ServicesManage from "../components/services/servicesManage.js";
 import Announcements from "../components/announcements/announcementsList.js";
 import IndividualCourseRequests from "../components/courses schudle/IndividualCourseRequests.js";
+
+import LibraryList from "../components/file/LibraryList";
+import AddLibrary from "../components/file/AddLibrary.js";
+
+import PlacementQuestionsList from "../components/placement_test/PlacementQuestionsList";
+import PlacementQuestionDetails from "../components/placement_test/PlacementQuestionDetails";
 
 function AutherizedAdmin() {
   return (
@@ -58,7 +63,6 @@ function AutherizedAdmin() {
               <Route path="/services-manage" element={<ServicesManage />} />
               <Route path="/language" element={<LanguageList />} />
               <Route path="/add-holiday" element={<AddHoliday />} />
-              <Route path="/student-grade" element={<StudentGradesPage />} />
               <Route path="/courses-date" element={<CourseSchedule />} />
               <Route path="/add-course" element={<AddCourse />} />
               <Route path="/announcements" element={<Announcements />} />
@@ -79,7 +83,16 @@ function AutherizedAdmin() {
                 path="/IndividualCourseRequests"
                 element={<IndividualCourseRequests />}
               />
-              holidays
+              <Route path="/file" element={<LibraryList />} />
+              <Route
+                path="/placement_test"
+                element={<PlacementQuestionsList />}
+              />
+              <Route
+                path="/placement_test/:id"
+                element={<PlacementQuestionDetails />}
+              />
+              <Route path="/holidays" element={<HolidaysPage />} />
             </Routes>
           </div>
           <Footer />

@@ -30,6 +30,8 @@ import {
   FaBullhorn,
   FaTasks,
   FaFileInvoiceDollar,
+  FaBookOpen,
+  FaClipboardList,
 } from "react-icons/fa";
 
 const Sidebar = () => {
@@ -47,6 +49,7 @@ const Sidebar = () => {
     { to: "/profile", icon: <FaUser />, label: "Profile page" },
     { to: "/student-list", icon: <FaUsers />, label: "Student List" },
     { to: "/announcements", icon: <FaBullhorn />, label: "Announcements" },
+    { to: "/file", icon: <FaBookOpen />, label: "Library" },
   ];
 
   // كل التبويبات للإدمن (مرتبة كمجموعات)
@@ -71,14 +74,12 @@ const Sidebar = () => {
         { to: "/rooms", icon: <FaSchool />, label: "Clases" },
         { to: "/profile", icon: <FaUser />, label: "Profile page" },
         { to: "/statistics", icon: <FaChartLine />, label: "Analytics" },
-        { to: "/student-grade", icon: <FaChartBar />, label: "Student grade" },
         { to: "/courses-date", icon: <FaClock />, label: "Courses date" },
         {
           to: "/IndividualCourseRequests",
           icon: "clock",
           label: "CourseRequests",
         },
-
         { to: "/about", icon: <FaExclamationCircle />, label: "Website info" },
         { to: "/invoices", icon: <FaFileInvoiceDollar />, label: "Invoices" },
         { to: "/student-list", icon: <FaUsers />, label: "Student List" },
@@ -86,6 +87,12 @@ const Sidebar = () => {
         { to: "/complaint-list", icon: <FaList />, label: "Complaint List" },
         { to: "/announcements", icon: <FaBullhorn />, label: "Announcements" },
         { to: "/Tasks", icon: <FaTasks />, label: "Tasks" },
+        { to: "/file", icon: <FaBookOpen />, label: "Library" },
+        {
+          to: "/placement_test",
+          icon: <FaClipboardList />,
+          label: "placement_test",
+        },
       ],
     },
   ];
@@ -104,14 +111,12 @@ const Sidebar = () => {
       { to: "/rooms", icon: "school", label: "Clases" },
       { to: "/profile", icon: "user", label: "Profile page" },
       { to: "/statistics", icon: "chart-line", label: "Analytics" },
-      { to: "/student-grade", icon: "graduation-cap", label: "Student grade" },
       { to: "/courses-date", icon: "clock", label: "Courses date" },
       {
         to: "/IndividualCourseRequests",
         icon: "clock",
-        label: "CourseRequests",
+        label: "Individual Course",
       },
-
       { to: "/about", icon: "info-circle", label: "Website info" },
       { to: "/invoices", icon: "file", label: "Invoices" },
       { to: "/student-list", icon: "users", label: "Student List" },
@@ -119,6 +124,12 @@ const Sidebar = () => {
       { to: "/complaint-list", icon: "list", label: "Complaint List" },
       { to: "/announcements", icon: "bullhorn", label: "Announcements" },
       { to: "/Tasks", icon: "tasks", label: "Tasks" },
+      { to: "/file", icon: "book", label: "Library" },
+      {
+        to: "/placement_test",
+        icon: "clipboard-list",
+        label: "Placement test",
+      },
     ];
   } else if (isSecretary) {
     tabs = [
@@ -131,13 +142,16 @@ const Sidebar = () => {
       {
         to: "/IndividualCourseRequests",
         icon: "clock",
-        label: "CourseRequests",
+        label: "Individual Course",
       },
-
+      { to: "/invoices", icon: "file", label: "Invoices" },
       { to: "/profile", icon: "user", label: "Profile page" },
       { to: "/student-list", icon: "users", label: "Student List" },
       { to: "/announcements", icon: "bullhorn", label: "Announcements" },
       { to: "/Tasks", icon: "tasks", label: "My Tasks" },
+      { to: "/language", icon: "language", label: "Language List" },
+      { to: "/holidays", icon: "calendar", label: "Holidays" },
+      { to: "/file", icon: "book", label: "Library" },
     ];
   }
 

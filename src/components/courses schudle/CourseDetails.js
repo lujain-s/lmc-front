@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import StudentList from "../student/StudentList";
 import Operations from "../back_component/Operations";
 import { useQuery } from "@tanstack/react-query";
+import StudentGradesList from "../student/StudentGradesList";
 
 export default function CourseDetails() {
   const { request } = Operations();
@@ -131,7 +132,7 @@ export default function CourseDetails() {
           </div>
 
           <StudentList id={id} start={course.startDate} />
-
+          <StudentGradesList courseId={id} />
           <style>{`
                 .custom-btn {
                   background-color: #1E3A5F;

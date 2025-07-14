@@ -4,7 +4,6 @@ import LanguagesPage from "../languages card/LanguagesPage";
 import Services from "../services/Services.js";
 import About from "../services/About.js";
 import HolidaysPage from "../free days/HolidaysPage.js";
-import StudentGradesPage from "../student/StudentGrades.js";
 import CourseSchedule from "../courses schudle/CourseSchedule.js";
 import "./Home.css";
 

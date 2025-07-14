@@ -28,7 +28,6 @@ export default function AddCourse({ onSubmit, initData, isNew }) {
   const [course, setCourse] = useState({
     TeacherId: initData?.TeacherId || "",
     LanguageId: initData?.LanguageId || "",
-    roomId: initData?.course_schedule?.RoomId || "",
     Description: initData?.Description || "",
     Start_Date: initData?.course_schedule?.[0]?.Start_Date || "",
     Start_Time: initData?.course_schedule?.[0]?.Start_Time || "",
@@ -50,7 +49,6 @@ export default function AddCourse({ onSubmit, initData, isNew }) {
       setCourse({
         TeacherId: initData?.TeacherId || "",
         LanguageId: initData?.LanguageId || "",
-        roomId: initData?.course_schedule?.RoomId || "",
         Description: initData?.Description || "",
         Start_Date: initData?.course_schedule?.[0]?.Start_Date || "",
         Start_Time: initData?.course_schedule?.[0]?.Start_Time || "",
@@ -199,7 +197,6 @@ export default function AddCourse({ onSubmit, initData, isNew }) {
       if (isNew) {
         setCourse({
           TeacherId: "",
-          RoomId: "",
           LanguageId: "",
           Description: "",
           Start_Date: "",
@@ -282,23 +279,6 @@ export default function AddCourse({ onSubmit, initData, isNew }) {
                   {teachers.map((teacher) => (
                     <option key={teacher.id} value={teacher.id}>
                       {teacher.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-3 text-start">
-                <label className="form-label">Select Room</label>
-                <select
-                  name="RoomId"
-                  className="form-control"
-                  value={course.RoomId}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">-- Select Room Number --</option>
-                  {rooms.map((room) => (
-                    <option key={room.id} value={room.id}>
-                      {room.NumberOfRoom}
                     </option>
                   ))}
                 </select>

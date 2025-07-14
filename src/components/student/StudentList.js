@@ -43,6 +43,8 @@ export default function StudentList({ id, start, showAllStudents = false }) {
     setLoading(true);
     try {
       await request.post("secretarya/cancelEnrollment", data);
+      setConfirmOpen(false); // إغلاق نافذة التأكيد بعد النجاح
+      refetch(); // إعادة جلب بيانات الطلاب
     } catch (error) {
       console.error(error);
     } finally {
@@ -228,6 +230,7 @@ export default function StudentList({ id, start, showAllStudents = false }) {
       {!showAllStudents && (
         <Confirm
           show={confirmOpen}
+          buttonText="Unenroll Student"
           title="Confirm Unenrollment"
           message="Are you sure you want to cancel Enrollment this student?"
           onSuccess={() => handleUnrollment()}

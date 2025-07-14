@@ -84,23 +84,15 @@ export default function IndividualCourseRequests() {
       await request.post(
         `secretarya/respondToRequestIndividualCourse/${actionId}`,
         {
-          status: responseData.status,
-          message: responseData.message,
+          response: responseData.status, // إذا كان المطلوب نص حر استخدم responseData.message
         }
       );
       setShowModal("");
       setResponseData({ status: "", message: "" });
       // جلب البيانات المحدثة فوراً
       await refreshData();
-      // إشعار نجاح
-      alert(
-        `Request ${
-          responseData.status === "approved" ? "approved" : "rejected"
-        } successfully!`
-      );
     } catch (error) {
       console.error(error);
-      alert("Error responding to request. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -186,7 +178,7 @@ export default function IndividualCourseRequests() {
           >
             <FaEye />
           </button>
-          {request.status === "pending" && (
+          {request.status === "Pending" && (
             <button
               className="button-orange me-1"
               style={{ padding: "4px 12px", fontSize: 18 }}
