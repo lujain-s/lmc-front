@@ -1,6 +1,7 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import axios from "axios";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDQi-zx1DFIG0X49Um_2-8dBsfw28RBim4",
@@ -26,6 +27,26 @@ export const requestForToken = async () => {
     });
     if (token) {
       console.log("FCM Token:", token);
+      // تحقق من التوكن السابق
+      const prevToken = localStorage.getItem("firebase_token");
+      if (prevToken !== token) {
+        // خزنه محلياً
+        localStorage.setItem("firebase_token", token);
+        // أرسل التوكن إلى السيرفر إذا كان المستخدم مسجلاً
+        const userToken = JSON.parse(localStorage.getItem("token"));
+        if (userToken) {
+          await axios.post(
+            "http://127.0.0.1:8000/api/editFirebaseToken",
+            { newFirebaseToken: token },
+            {
+              headers: {
+                Authorization: `Bearer ${userToken}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+        }
+      }
     } else {
       console.warn("No registration token available.");
     }
